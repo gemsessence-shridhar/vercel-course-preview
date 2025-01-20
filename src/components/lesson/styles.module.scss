@@ -1,0 +1,122 @@
+.feedback-container {
+  font-family: "Open Sans";
+  font-size: 18px;
+  padding-left: 10px;
+  .correct-feedback-label {
+    color: #72be1d;
+    font-weight: 600;
+  }
+  .incorrect-feedback-label {
+    color: #d20000;
+    font-weight: 600;
+  }
+}
+.incorrect-label-container {
+  color: #d20000;
+  padding-left: 10px;
+  .incorrect-label {
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+.correct-label-container {
+  color: #72be1d;
+  padding-left: 10px;
+  .correct-label {
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+.feedback-container-bg-color {
+  border-radius: 7px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 16px 5px #ede9e7;
+  position: relative;
+  margin-top: 1em;
+  overflow: hidden;
+  padding: 18px;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 19px;
+    background-color: #21154a;
+    box-shadow: 0 2px 47px 8px #ede9e7;
+    width: 6px;
+  }
+}
+.feedback-container-green-bg-color {
+  &::before {
+    background-color: #72be1d;
+  }
+}
+.feedback-container-red-bg-color {
+  &::before {
+    background-color: #d20000;
+  }
+}
+
+.correct-answer-selected-container {
+  .answer-checkbox {
+    &:checked + .checkbox-overlay {
+      &:before {
+        background: #72be1d;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.incorrect-answer-selected-container {
+  .answer-checkbox {
+    &:checked + .checkbox-overlay {
+      &:before {
+        opacity: 1;
+        background: #d20000;
+      }
+    }
+  }
+}
+.text-label {
+  font-size: 17px !important;
+}
+.checkbox-overlay {
+  border: 2px solid #c2c2c2;
+  height: 20px;
+  width: 20px;
+  display: inline-flex;
+  border-radius: 100%;
+  position: relative;
+  top: 2px;
+  align-items: center;
+  justify-content: center;
+  &::before {
+    content: "";
+    background: #000;
+    position: absolute;
+    left: auto;
+    top: auto;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    opacity: 0;
+  }
+  &.multi-select-answer {
+    border-radius: 4px;
+    border: 2px solid #c2c2c2;
+  }
+}
+.check-mark-icon{
+  font-size: 14px;
+  display: none;
+}
+.checkbox-overlay-green {
+  border: 2px solid #72be1d;
+}
+.checkbox-overlay-red {
+  border: 2px solid #d20000;
+}

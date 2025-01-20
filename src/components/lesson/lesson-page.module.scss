@@ -1,0 +1,31 @@
+
+.lesson-container {
+  font-family: 'Open Sans';
+  width: 100%;
+  .outcome-block {
+    border-radius: 4px;
+    background-color: #f3f9ff;
+
+    .outcome-title {
+      color: #000000;
+      font-family: "Open Sans";
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: -0.89px;
+      line-height: 27px;
+    }
+
+    .outcome-desc {
+      color: #000000;
+      font-family: "Open Sans";
+      font-size: 14px;
+      letter-spacing: -0.32px;
+      line-height: 19px;
+    }
+  }
+
+  .continue-button {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
