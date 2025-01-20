@@ -84,8 +84,8 @@ const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitles }) => 
 
   return (
     <PageWrapper
-      secondaryColumnWidth={secondaryWidth}
-      secondaryColumnPosition={secondaryPosition}
+      secondarycolumnwidth={secondaryWidth}
+      secondarycolumnposition={secondaryPosition}
     >
       <PageWrapper.PrimaryColumn>
         {

@@ -437,7 +437,6 @@ const getFormattedConnectiveTissue = (
   if (isEmpty(pageConnectiveTissue)) {
     return null;
   }
-  
   return {
     id: getId(pageConnectiveTissue[0].node),
     content: data.connective_tissue.connective_tissue.components.map(

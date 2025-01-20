@@ -8,9 +8,9 @@ import {
   get,
 } from 'lodash';
 
-// import PageWrapper from '../../shared/page_wrapper';
-// import MainContent from '../../lesson/MainContent';
-// import SecondaryContent from '../../lesson/SecondaryContent';
+import PageWrapper from '../shared/page_wrapper';
+import MainContent from '../lesson/MainContent';
+import SecondaryContent from '../lesson/SecondaryContent';
 import ConnectiveTissue from '../lesson/ConnectiveTissue';
 import VibButton from '../shared/vib_button';
 import PageTitle from '../lesson/PageTitle';
@@ -113,9 +113,9 @@ const Page = ({
           )
           : null
       }
-      {/* <PageWrapper
-        secondaryColumnWidth={secondaryWidth.replace('%', '')}
-        secondaryColumnPosition={secondaryPosition}
+      <PageWrapper
+        secondarycolumnwidth={secondaryWidth.replace('%', '')}
+        secondarycolumnposition={secondaryPosition}
       >
         <MainContent
           mainContent={mainContent}
@@ -160,7 +160,7 @@ const Page = ({
             />
           )
           : null
-      } */}
+      }
       <div className="d-flex justify-content-between align-items-center">
         {
           isEmpty(previousPageUrl) ? null : (

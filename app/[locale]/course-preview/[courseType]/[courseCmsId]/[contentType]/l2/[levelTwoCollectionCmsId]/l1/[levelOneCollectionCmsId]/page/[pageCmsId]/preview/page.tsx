@@ -159,9 +159,9 @@ export const getPageData = (async (locale, pageCmsId) => {
 			query: pagePreview.queries.GET_CARD_DETAILS,
 			variables: { cardCmsIds: uids, locale }, fetchPolicy: 'network-only' },
 		);
-		//  cardData.all_card.items need to add this in below if condition
+		
     if (cardData) {
-      formattedData = getPageFormattedData(mainContentResData, secondaryContentData, otherMainContentData, otherSecondaryContentData, pageConnectiveTissueBasicInfoData, bottomConnectiveTissueData, topConnectiveTissueData, mainContentImageData, secondaryContentImageData, secondaryContentVideoData, mainContentVideoData, otherMainContentImageData, otherSecondaryContentImageData, otherSecondaryContentVideoData, otherMainContentVideoData, cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardImageAssociatedContentData, otherCardImageAssociatedContentData, videoAssociatedContentData, otherVideoAssociatedContentData, imageAssociatedContentData, otherImageAssociatedContentData);
+      formattedData = getPageFormattedData(mainContentResData, secondaryContentData, otherMainContentData, otherSecondaryContentData, pageConnectiveTissueBasicInfoData, bottomConnectiveTissueData, topConnectiveTissueData, mainContentImageData, secondaryContentImageData, secondaryContentVideoData, mainContentVideoData, otherMainContentImageData, otherSecondaryContentImageData, otherSecondaryContentVideoData, otherMainContentVideoData, cardData.data.all_card.items, cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardImageAssociatedContentData, otherCardImageAssociatedContentData, videoAssociatedContentData, otherVideoAssociatedContentData, imageAssociatedContentData, otherImageAssociatedContentData);
     }
 		return formattedData;
   }

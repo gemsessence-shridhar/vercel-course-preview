@@ -41,8 +41,8 @@ const ContentVideo = ({ content }) => {
 
   return (
     <PageWrapper
-      secondaryColumnWidth={secondaryWidth}
-      secondaryColumnPosition={secondaryPosition}
+      secondarycolumnwidth={secondaryWidth}
+      secondarycolumnposition={secondaryPosition}
     >
       <PageWrapper.PrimaryColumn>
         <VideoAssociatedContentWrapper

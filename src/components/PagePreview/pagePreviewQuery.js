@@ -417,17 +417,17 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
   
   if (!pageConnectiveTissueBasicInfo.loading && isEmpty(pageConnectiveTissueBasicInfo.error)) {
     const topConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.top_connective_tissueConnection.edges;
-    // if (!isEmpty(topConnectiveTissueConnection) && !topConnectiveTissueLoading && !topConnectiveTissueError && !topConnectiveTissueData) {
+    if (!isEmpty(topConnectiveTissueConnection) && !topConnectiveTissueData) {
       
-    const topConnectiveTissueCmsId = topConnectiveTissueConnection[0].node.system.uid;
-    var topConnectiveTissueLoading = true;
-    const { data: topConnectiveTissue, error: topConnectiveTissueError, loading: connectiveLoading } = await fetchGraphQLData(pagePreview.queries.GET_CONNECTIVE_TISSUE, { connectiveTissueCmsId: topConnectiveTissueCmsId, locale } );
-    
-    if (topConnectiveTissue) {
-      topConnectiveTissueData = topConnectiveTissue;
-      topConnectiveTissueLoading = connectiveLoading
+      const topConnectiveTissueCmsId = topConnectiveTissueConnection[0].node.system.uid;
+      var topConnectiveTissueLoading = true;
+      const { data: topConnectiveTissue, error: topConnectiveTissueError, loading: connectiveLoading } = await fetchGraphQLData(pagePreview.queries.GET_CONNECTIVE_TISSUE, { connectiveTissueCmsId: topConnectiveTissueCmsId, locale } );
+      
+      if (topConnectiveTissue) {
+        topConnectiveTissueData = topConnectiveTissue;
+        topConnectiveTissueLoading = connectiveLoading
+      }
     }
-    // }
     
     if (topConnectiveTissueData) {
       updateAssociatedContentIds(topConnectiveTissueData, 'topConnectiveTissue');
@@ -435,7 +435,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     
     var bottomConnectiveTissueLoading = true;
     const bottomConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges;
-    // if (!isEmpty(bottomConnectiveTissueConnection) && !bottomConnectiveTissueLoading && !bottomConnectiveTissueError && !bottomConnectiveTissueData) {
+    if (!isEmpty(bottomConnectiveTissueConnection) && !bottomConnectiveTissueData) {
       const bottomConnectiveTissueCmsId = bottomConnectiveTissueConnection[0].node.system.uid;
       const { data: bottomConnectiveTissue, error: bottomConnectiveTissueError, loading: bottomLoading } = await fetchGraphQLData(pagePreview.queries.GET_CONNECTIVE_TISSUE, { connectiveTissueCmsId: bottomConnectiveTissueCmsId, locale });
 
@@ -443,7 +443,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
         bottomConnectiveTissueData = bottomConnectiveTissue;
         bottomConnectiveTissueLoading = bottomLoading;
       }
-    // }
+    }
     if (bottomConnectiveTissueData) {
       updateAssociatedContentIds(bottomConnectiveTissueData, 'bottomConnectiveTissue');
     }
@@ -461,43 +461,33 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     
   if (!isContentLoading() && !getErrorInContent()) {
 
-//     if (!cardVideoAssociatedContentLoading && !cardVideoAssociatedContentError && !cardVideoAssociatedContentData) {
-        const { data: videoData, error: bottomConnectiveTissueError, loading: videoLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
+    const { data: videoData, error: bottomConnectiveTissueError, loading: videoLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
 
-        if (videoData) {
-          cardVideoAssociatedContentData = videoData;
-          cardVideoAssociatedContentLoading = videoLoading;
-        }
+    if (videoData) {
+      cardVideoAssociatedContentData = videoData;
+    }
  
-//     }
-
-//     if (!otherCardVideoAssociatedContentLoading && !otherCardVideoAssociatedContentError && !otherCardVideoAssociatedContentData) {
+    
 //       otherCardVideoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
-//     }
 
-//     if (!cardImageAssociatedContentLoading && !cardImageAssociatedContentError && !cardImageAssociatedContentData) {
+
 //       cardImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
-//     }
 
-//     if (!otherCardImageAssociatedContentLoading && !otherCardImageAssociatedContentError && !otherCardImageAssociatedContentData) {
+
 //       otherCardImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
-//     }
-// // ----------------------------------------------------
-//     if (!videoAssociatedContentLoading && !videoAssociatedContentError && !videoAssociatedContentData) {
+
+// // ----------------------------------------------------    
 //       videoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
-//     }
 
-//     if (!otherVideoAssociatedContentLoading && !otherVideoAssociatedContentError && !otherVideoAssociatedContentData) {
+
 //       otherVideoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
-//     }
 
-//     if (!imageAssociatedContentLoading && !imageAssociatedContentError && !imageAssociatedContentData) {
+
 //       imageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
-//     }
 
-//     if (!otherImageAssociatedContentLoading && !otherImageAssociatedContentError && !otherImageAssociatedContentData) {
+
 //       otherImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
-//     }
+
   }
   return {
     loading: false,

@@ -135,9 +135,9 @@ const CardReference = ({
 
   const getContent = () => (
     <PageWrapper
-      secondaryColumnWidth={secondaryWidth.replace('%', '')}
-      secondaryColumnPosition={secondaryPosition}
-      paddingBottom="0"
+      secondarycolumnwidth={secondaryWidth.replace('%', '')}
+      secondarycolumnposition={secondaryPosition}
+      paddingbottom="0"
     >
       <PageWrapper.PrimaryColumn>
         {content.components.map((item) => getInnerContent(item, Math.random()))}

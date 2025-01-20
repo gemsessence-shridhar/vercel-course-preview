@@ -1,8 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-// import { h1 } from 'react-intl';
-// need to fix
+import {useTranslations} from 'next-intl';
 import LaunchIcon from '@mui/icons-material/Launch';
 import styles from './style.module.scss';
 
@@ -13,13 +12,14 @@ const Feedback = ({
   showOnlyIncorrectFeedback,
   isMultiSelect,
 }) => {
+  const t = useTranslations();
   const getFeedbackLabel = () => {
     if (showOnlyIncorrectFeedback && !isCorrectAnswerSelectedOrShowFeedbackOnCorrectAnswer) {
-      return (<h1 id="answers.feedback.label.incorrect" />);
+      return t("answers.feedback.label.incorrect");
     }
     return isCorrectAnswerSelectedOrShowFeedbackOnCorrectAnswer
-      ? (<h1 id="answers.feedback.label.correct" />)
-      : (<h1 id="answers.feedback.label.incorrect" />);
+      ? t("answers.feedback.label.correct")
+      : t("answers.feedback.label.incorrect");
   };
 
   const getFeedbackLabelClass = () => (
@@ -67,7 +67,7 @@ const Feedback = ({
       }
 
       {
-        lessons.map((lesson) => (
+        lessons?.map((lesson) => (
           renderLessonText(lesson)
         ))
       }

@@ -1,5 +1,10 @@
 {
-	"HomePage": {
-		"title": "Hello worldddddddddddd!"
-	}
+  "answers": {
+    "feedback": {
+      "label": {
+        "correct": "Best choice!",
+        "incorrect": "Not best choice."
+      }
+    }
+  }
 }

@@ -44,16 +44,17 @@ const StyledPageWrapper = styled.div`
     padding: 0 15px;
   }`;
 
+
 const PageWrapper = ({
-  secondaryColumnWidth,
-  secondaryColumnPosition,
+  secondarycolumnwidth,
+  secondarycolumnposition,
   children,
-  paddingBottom,
+  paddingbottom,
 }) => (
   <StyledPageWrapper
-    secondaryColumnWidth={secondaryColumnWidth}
-    secondaryColumnPosition={secondaryColumnPosition}
-    paddingBottom={paddingBottom}
+    secondarycolumnwidth={secondarycolumnwidth}
+    secondarycolumnposition={secondarycolumnposition}
+    paddingbottom={paddingbottom}
   >
     {children}
   </StyledPageWrapper>
@@ -63,17 +64,17 @@ PageWrapper.PrimaryColumn = PrimaryColumn;
 PageWrapper.SecondaryColumn = SecondaryColumn;
 
 PageWrapper.propTypes = {
-  secondaryColumnWidth: PropTypes.string,
-  secondaryColumnPosition: PropTypes.string,
+  secondarycolumnwidth: PropTypes.string,
+  secondarycolumnposition: PropTypes.string,
   children: PropTypes.node,
-  paddingBottom: PropTypes.string,
+  paddingbottom: PropTypes.string,
 };
 
 PageWrapper.defaultProps = {
-  secondaryColumnWidth: '',
-  secondaryColumnPosition: '',
+  secondarycolumnwidth: '',
+  secondarycolumnposition: '',
   children: null,
-  paddingBottom: '1',
+  paddingbottom: '1',
 };
 
 export default PageWrapper;

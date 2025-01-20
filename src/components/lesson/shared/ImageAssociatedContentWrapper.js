@@ -154,8 +154,8 @@ const ImageAssociatedContentWrapper = ({
 
   return (
     <PageWrapper
-      secondaryColumnWidth={secondaryWidth}
-      secondaryColumnPosition={secondaryPosition}
+      secondarycolumnwidth={secondaryWidth}
+      secondarycolumnposition={secondaryPosition}
     >
       <PageWrapper.PrimaryColumn>
         <StyledImageWrapper>

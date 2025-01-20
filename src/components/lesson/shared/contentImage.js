@@ -94,8 +94,8 @@ const ContentImage = ({
 
   return (
     <PageWrapper
-      secondaryColumnWidth={secondaryWidth}
-      secondaryColumnPosition={secondaryPosition}
+      secondarycolumnwidth={secondaryWidth}
+      secondarycolumnposition={secondaryPosition}
     >
       <PageWrapper.PrimaryColumn>
         <div className={classNames(styles['lesson-page-content-container'], 'mt-2')}>
