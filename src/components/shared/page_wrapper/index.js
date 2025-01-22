@@ -19,27 +19,27 @@ const StyledPageWrapper = styled.div`
   }
   `};
   .primary{
-    ${(props) => props.secondaryColumnWidth !== '0' && css`
-      flex-basis: ${100 - props.secondaryColumnWidth}%;
+    ${(props) => props.secondarycolumnwidth !== '0' && css`
+      flex-basis: ${100 - props.secondarycolumnwidth}%;
       flex-grow: 1;
       flex-shrink: 0;
-      max-width: ${100 - props.secondaryColumnWidth}%;
+      max-width: ${100 - props.secondarycolumnwidth}%;
     `};
-    ${(props) => props.secondaryColumnPosition && css`
-      order: ${props.secondaryColumnPosition === 'right' ? 1 : 2}
+    ${(props) => props.secondarycolumnposition && css`
+      order: ${props.secondarycolumnposition === 'right' ? 1 : 2}
     `};
     padding: 0 15px;
   };
   .secondary{
-    ${(props) => props.secondaryColumnWidth !== '0' && css`
-      flex-basis: ${props.secondaryColumnWidth}%;
+    ${(props) => props.secondarycolumnwidth !== '0' && css`
+      flex-basis: ${props.secondarycolumnwidth}%;
       flex-grow: 1;
       flex-shrink: 0;
       word-break: break-word;
-      max-width: ${props.secondaryColumnWidth}%;
+      max-width: ${props.secondarycolumnwidth}%;
     `};
-    ${(props) => props.secondaryColumnPosition && css`
-      order: ${props.secondaryColumnPosition === 'right' ? 2 : 1}
+    ${(props) => props.secondarycolumnposition && css`
+      order: ${props.secondarycolumnposition === 'right' ? 2 : 1}
     `};
     padding: 0 15px;
   }`;

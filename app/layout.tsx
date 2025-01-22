@@ -3,8 +3,15 @@ import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Row, Col } from 'react-bootstrap';
+import { Open_Sans } from "@next/font/google";
 import layoutStyles from "../src/components/layout-style.module.scss";
 import "./globals.css";
+
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default async function RootLayout({
   children,

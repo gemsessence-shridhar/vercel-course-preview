@@ -206,80 +206,6 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     }
   }
 
-//
-//   // video: page main content
-
-//   // video: page secondary content
-// 
-
-//   
-//   // End video: page secondary content
-
-// // -----------------------------------------------------------------------------------------
-// // ------------------------------------------------------------------------------------------
-//   const [cardVideoAssociatedContentQuery, {
-//     data: cardVideoAssociatedContentData,
-//     error: cardVideoAssociatedContentError,
-//     loading: cardVideoAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_VIDEO_DATA);
-
-//   const [otherCardVideoAssociatedContentQuery, {
-//     data: otherCardVideoAssociatedContentData,
-//     error: otherCardVideoAssociatedContentError,
-//     loading: otherCardVideoAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA);
-
-//   const [cardImageAssociatedContentQuery, {
-//     data: cardImageAssociatedContentData,
-//     error: cardImageAssociatedContentError,
-//     loading: cardImageAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_IMAGE_DATA);
-
-//   const [otherCardImageAssociatedContentQuery, {
-//     data: otherCardImageAssociatedContentData,
-//     error: otherCardImageAssociatedContentError,
-//     loading: otherCardImageAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA);
-
-
-//   const [videoAssociatedContentQuery, {
-//     data: videoAssociatedContentData,
-//     error: videoAssociatedContentError,
-//     loading: videoAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_VIDEO_DATA);
-
-//   const [otherVideoAssociatedContentQuery, {
-//     data: otherVideoAssociatedContentData,
-//     error: otherVideoAssociatedContentError,
-//     loading: otherVideoAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA);
-
-//   const [imageAssociatedContentQuery, {
-//     data: imageAssociatedContentData,
-//     error: imageAssociatedContentError,
-//     loading: imageAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_IMAGE_DATA);
-
-//   const [otherImageAssociatedContentQuery, {
-//     data: otherImageAssociatedContentData,
-//     error: otherImageAssociatedContentError,
-//     loading: otherImageAssociatedContentLoading,
-//   }] = useLazyQuery(pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA);
-//   // ----------------------------------------------------------------------------
-//   // ----------------------------------------------------------------------------
-
-
-
-//   // ----------------------------------------------------------------------------
-
-//   // top connective tissue
-
-
-//   // bottom connective tissue
-
-
-  // --------------------------------------------------------------------
-
   const isContentLoading = () => (
     mainContentRes.loading
     || mainContentResCard.loading
@@ -466,27 +392,48 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     if (videoData) {
       cardVideoAssociatedContentData = videoData;
     }
- 
-    
-//       otherCardVideoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
 
+    const { data: cardVideoAssociatedContent, error: otherCardVideoAssociatedContentError, loading: otherCardVideoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
 
-//       cardImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
+    if (cardVideoAssociatedContent) {
+      otherCardVideoAssociatedContentData = cardVideoAssociatedContent;
+    }
 
+    const { data: cardImageAssociatedContent, error: cardImageAssociatedContentError, loading: cardImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_IMAGE_DATA,{ imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
 
-//       otherCardImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
+    if (cardImageAssociatedContent) {
+      cardImageAssociatedContentData = cardImageAssociatedContent;
+    }
 
-// // ----------------------------------------------------    
-//       videoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
+    const { data: otherCardImageAssociatedContent, error: otherCardImageAssociatedContentError, loading: otherCardImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA,{ imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
 
+    if (otherCardImageAssociatedContent) {
+      otherCardImageAssociatedContentData = otherCardImageAssociatedContent;
+    }
 
-//       otherVideoAssociatedContentQuery({ variables: { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } });
+    const { data: videoAssociatedContent, error: videoAssociatedContentError, loading: videoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
 
+    if (videoAssociatedContent) {
+      videoAssociatedContentData = videoAssociatedContent;
+    }
 
-//       imageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
+    const { data: otherVideoAssociatedContent, error: otherVideoAssociatedContentError, loading: otherVideoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
 
+    if (otherVideoAssociatedContent) {
+      otherVideoAssociatedContentData = otherVideoAssociatedContent;
+    }
 
-//       otherImageAssociatedContentQuery({ variables: { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } });
+    const { data: imageAssociatedContent, error: imageAssociatedContentError, loading: imageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
+
+    if (imageAssociatedContent) {
+      imageAssociatedContentData = imageAssociatedContent;
+    }
+
+    const { data: otherImageAssociatedContent, error: otherImageAssociatedContentError, loading: otherImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
+
+    if (otherImageAssociatedContent) {
+      otherImageAssociatedContentData = otherImageAssociatedContent;
+    }
 
   }
   return {

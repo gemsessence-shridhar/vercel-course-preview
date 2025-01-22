@@ -63,7 +63,7 @@ const LessonAnswersBlock = ({
           styles[getAnswerContainerClass()],
           styles[getContainerClassForSelectedAnswerOnly()],
           styles[getCheckedCheckboxClassName()],
-          'answer-container media mb-2')}
+          'answer-container media mb-2 d-flex')}
       >
         <VibCheckboxRadioButton
           value={answerId}

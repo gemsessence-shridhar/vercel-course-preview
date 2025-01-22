@@ -159,7 +159,7 @@ export const getPageData = (async (locale, pageCmsId) => {
     
 		const cardData = await client.query({
 			query: pagePreview.queries.GET_CARD_DETAILS,
-			variables: { cardCmsIds: uids, locale }, fetchPolicy: 'network-only' },
+			variables: { cardCmsIds: uids, locale }, fetchPolicy: 'no-cache' },
 		);
 		
     if (cardData) {

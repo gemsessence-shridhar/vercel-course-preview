@@ -27,17 +27,6 @@ const ImageAssociatedContentWrapper = ({
   courseId,
 }) => {
   const [isPortraitImage, setIsPortraitImage] = useState(false);
-
-  const StyledImageWrapper = styled.span`
-    img {
-      max-width: 100%;
-      border-radius: 5px;
-      margin: auto;
-      display: block;
-      ${isPortraitImage && `max-height: 600px`}
-    }
-  `;
-
   let secondaryWidth = '0';
   let secondaryPosition = 'left';
 
@@ -158,13 +147,20 @@ const ImageAssociatedContentWrapper = ({
       secondarycolumnposition={secondaryPosition}
     >
       <PageWrapper.PrimaryColumn>
-        <StyledImageWrapper>
-          <Image
+        <span>
+        <Image
             src={content.url}
             alt={content.alt || content.title}
             className={classNames('mt-2')}
+            style={{
+              maxWidth: '100%',
+              borderRadius: '5px',
+              margin: 'auto',
+              display: 'block',
+              ...(isPortraitImage && { maxHeight: '600px' }),
+            }}
           />
-        </StyledImageWrapper>
+        </span>
       </PageWrapper.PrimaryColumn>
       { getAssociatedContent() }
     </PageWrapper>
