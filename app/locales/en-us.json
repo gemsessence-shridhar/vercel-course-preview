@@ -6,5 +6,8 @@
         "incorrect": "Not best choice."
       }
     }
+  },
+  "label":{
+    "youAreHere": "You are here"
   }
 }

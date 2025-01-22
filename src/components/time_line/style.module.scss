@@ -1,0 +1,115 @@
+.timeline-container {
+  svg{
+    width: 26px;
+    height: 26px;
+  }
+  .item-tooltip-container {
+    &.unlocked-item {
+      button{
+      margin-top: 3px;
+        svg {
+          g path:first-child{
+            fill: #21154A;
+          }
+        }
+      }
+      &::after {
+        content: " ";
+        display: block;
+        position: absolute;
+        z-index: 0;
+        top: 55%;
+        transform: translateY(-55%);
+        left: 26px;
+        right: 0;
+        height: 2px;
+        color: #fff;
+        background-color: #646464;
+      }
+    }
+    &.locked-item {
+      position: relative;
+      button{
+        margin-top: 3px;
+      }
+      &::after {
+        position: absolute;
+        content: " ";
+        display: block;
+        position: absolute;
+        z-index: 1;
+        top: 55%;
+        transform: translateY(-55%);
+        left: 35px;
+        right: 4px;
+        height: 2px;
+        color: #fff;
+        background-color: #ececec;
+      }
+      &:last-child::after {
+        display: none;
+      }
+    }
+  }
+  .item-btn {
+    position: relative;
+    z-index: 1;
+
+    &.locked-item-link {
+      background-color: #fff;
+      opacity: 1;
+      pointer-events: none;
+    }
+  }
+  .timeline-item-wrapper {
+    
+    button {
+      position: relative;
+      &.static-button:focus{
+        box-shadow: none;
+      }
+      &.static-button:hover{
+        cursor: default;
+      }
+    }
+    .current-item-pointer-btn{
+      svg{
+        box-shadow: 0 2px 22px 5px rgba(83,136,185,0.38);
+        border-radius: 100%;
+      }
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        left: 50%;
+        white-space: nowrap;
+        top: 36px;
+        transform: translateX(-50%); 
+        color: #5388B9;
+        font-size: 14px;
+        letter-spacing: -0.32px;
+        line-height: 19px;  
+      }
+    }
+    .item-tooltip-container {
+      position: relative;
+      flex-grow: 1;
+      &:last-child {
+        flex-grow: 0;
+        .current-item-pointer-btn::after {
+          left: unset;
+          transform: translateX(-100%);
+        }
+      }
+      &:first-child {
+        .current-item-pointer-btn::after {
+          left: 0;
+          transform: translateX(1%);
+        }
+      }
+    }
+  }
+  .next-topic-txt{
+    font-size: 13px;
+    color: #9B9B9B;
+  }
+}

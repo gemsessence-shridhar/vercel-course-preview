@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 import { isEmpty, uniq } from 'lodash';
+import TimeLine from '../../../../../../../../../../../../../src/components/time_line';
+
 import pagePreviewStyles from '../../../../../../../../../../../../../src/components/lesson/lesson-page.module.scss';
 import { pagePreview } from '../../../../../../../../../../../../../src/graphql_states/contentstack';
 import createApolloClient from "../../../../../../../../../../../../../apollo_client";
@@ -8,43 +10,43 @@ import { getPageFormattedData } from '../../../../../../../../../../../../../src
 import Page from '../../../../../../../../../../../../../src/components/PagePreview/Page';
 
 
-// const sampleItems = [
-//   {
-//     id: '1',
-//     title: 'LevelOneCollection-101',
-//     status: 'completed',
-//     position: 1,
-//     __typename: 'LevelOneCollection',
-//   },
-//   {
-//     id: '2',
-//     title: 'LevelOneCollection-202',
-//     status: 'inProgress',
-//     position: 2,
-//     __typename: 'LevelOneCollection',
-//   },
-//   {
-//     id: '3',
-//     title: 'LevelOneCollection-303',
-//     status: 'open',
-//     position: 3,
-//     __typename: 'LevelOneCollection',
-//   },
-//   {
-//     id: '4',
-//     title: 'LevelOneCollection-404',
-//     status: 'open',
-//     position: 4,
-//     __typename: 'LevelOneCollection',
-//   },
-//   {
-//     id: '5',
-//     title: 'LevelOneCollection-505',
-//     status: 'open',
-//     position: 5,
-//     __typename: 'LevelOneCollection',
-//   },
-// ];
+const sampleItems = [
+  {
+    id: '1',
+    title: 'LevelOneCollection-101',
+    status: 'completed',
+    position: 1,
+    __typename: 'LevelOneCollection',
+  },
+  {
+    id: '2',
+    title: 'LevelOneCollection-202',
+    status: 'inProgress',
+    position: 2,
+    __typename: 'LevelOneCollection',
+  },
+  {
+    id: '3',
+    title: 'LevelOneCollection-303',
+    status: 'open',
+    position: 3,
+    __typename: 'LevelOneCollection',
+  },
+  {
+    id: '4',
+    title: 'LevelOneCollection-404',
+    status: 'open',
+    position: 4,
+    __typename: 'LevelOneCollection',
+  },
+  {
+    id: '5',
+    title: 'LevelOneCollection-505',
+    status: 'open',
+    position: 5,
+    __typename: 'LevelOneCollection',
+  },
+];
 
 const getCardReferences = (components) => components.filter((c) => c.__typename === 'PageComponentsComponentsCardReference' && !isEmpty(c.card_reference));
 
@@ -175,12 +177,17 @@ export default async function PagePreview({ params }) {
   
   return (
 		<div className={classNames(pagePreviewStyles['lesson-container'], 'pb-5')}>
-			<Page
-				pageData={pageData.page}
-				nextPageUrl={''}
-				previousPageUrl={''}
-			/>
-		
+      <TimeLine
+        items={sampleItems}
+        currentItem={sampleItems[0]}
+        nextItemTitle="Next title"
+      >
+        <Page
+          pageData={pageData.page}
+          nextPageUrl={''}
+          previousPageUrl={''}
+        />
+      </TimeLine>
 		</div>
   );
 }
