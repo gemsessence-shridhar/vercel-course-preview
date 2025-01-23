@@ -1,16 +1,32 @@
 import classNames from 'classnames';
 import { isEmpty, uniq } from 'lodash';
-import TimeLine from '../../../../../../../../../../../../../src/components/time_line';
+import TimeLine from '@components/time_line';
 
-import pagePreviewStyles from '../../../../../../../../../../../../../src/components/lesson/lesson-page.module.scss';
-import { pagePreview } from '../../../../../../../../../../../../../src/graphql_states/contentstack';
-import createApolloClient from "../../../../../../../../../../../../../apollo_client";
-import { getPageQueryData } from '../../../../../../../../../../../../../src/components/PagePreview/pagePreviewQuery';
-import { getPageFormattedData } from '../../../../../../../../../../../../../src/components/PagePreview/pageCmsDataFormatter';
-import Page from '../../../../../../../../../../../../../src/components/PagePreview/Page';
+import pagePreviewStyles from '@components/lesson/lesson-page.module.scss';
+import { pagePreview } from '@graphql/contentstack';;
+import createApolloClient from "@//apollo_client";
+import { getPageQueryData } from '@components/PagePreview/pagePreviewQuery';
+import { getPageFormattedData } from '@components/PagePreview/pageCmsDataFormatter';
+import Page from '@components/PagePreview/Page';
 
 
-const sampleItems = [
+interface Component {
+  __typename: string;
+  card_reference?: {
+    cardConnection?: {
+      edges: { node: { system: { uid: string } } }[];
+    };
+  };
+}
+interface SampleItem {
+  id: string;
+  title: string;
+  status: 'completed' | 'inProgress' | 'open';
+  position: number;
+  __typename: string;
+}
+
+const sampleItems: SampleItem[] = [
   {
     id: '1',
     title: 'LevelOneCollection-101',
@@ -48,12 +64,18 @@ const sampleItems = [
   },
 ];
 
-const getCardReferences = (components) => components.filter((c) => c.__typename === 'PageComponentsComponentsCardReference' && !isEmpty(c.card_reference));
+const getCardReferences = (components: Component[]): Component[] =>
+  components.filter((c) => c.__typename === 'PageComponentsComponentsCardReference' && !isEmpty(c.card_reference));
 
-const getUids = (nodes) => nodes.map(({ system }) => system.uid);
+const getUids = (nodes: { system: { uid: string } }[]): string[] =>
+  nodes.map(({ system }) => system.uid);
 
 
-const mergeTwoArrays = (data, oldComponents, type) => {
+const mergeTwoArrays = (
+  data: any,
+  oldComponents: any[],
+  type: 'main_content' | 'secondary_content' | 'connective_tissue'
+): any[] => {
   if (!isEmpty(data)) {
     switch (type) {
       case 'main_content':
@@ -66,7 +88,6 @@ const mergeTwoArrays = (data, oldComponents, type) => {
         console.log('type not matched');
     }
   }
-
   return oldComponents;
 };
 
@@ -91,15 +112,12 @@ export const getPageData = (async (locale, pageCmsId) => {
 	let formattedData = {};
 
   const {
-    loading,
     mainContentData,
     mainContentResCardData,
     secondaryContentData,
     otherMainContentData,
     otherSecondaryContentData,
     pageConnectiveTissueBasicInfoData,
-    isTopConnectiveTissue,
-    isBottomConnectiveTissue,
     topConnectiveTissueData,
     bottomConnectiveTissueData,
     secondaryContentVideoData,
@@ -130,11 +148,7 @@ export const getPageData = (async (locale, pageCmsId) => {
     && otherMainContentData
     && otherSecondaryContentData
     && pageConnectiveTissueBasicInfoData
-    // && secondaryContentImageData
-    // && secondaryContentVideoData
     && mainContentVideoData
-    // && otherSecondaryContentImageData
-    // && otherSecondaryContentVideoData
     && otherMainContentVideoData
   ) {
 
@@ -151,7 +165,7 @@ export const getPageData = (async (locale, pageCmsId) => {
 
     let {main_content} = mainContentResData.pagev4;
     main_content = {...main_content, ...{components: mainContentDataComponents}}
-    let pagev4 = {...mainContentResData.pagev4, ...{main_content: main_content}}
+    const pagev4 = {...mainContentResData.pagev4, ...{main_content: main_content}}
     mainContentResData = {pagev4: pagev4}
 
     const uids = getUidOfCardReferenceFrom(mainContentResData, secondaryContentData, otherMainContentData, otherSecondaryContentData, bottomConnectiveTissueData, topConnectiveTissueData);
@@ -169,9 +183,9 @@ export const getPageData = (async (locale, pageCmsId) => {
   }
 })
 
-export default async function PagePreview({ params }) {
+export default async function PagePreview({ params }: { params: any }) {
 	const urlParams = await params;
-	const { locale, courseType, courseCmsId, contentType, levelTwoCollectionCmsId, levelOneCollectionCmsId, pageCmsId } = urlParams;
+	const { locale, pageCmsId } = urlParams;
 	
   const pageData = await getPageData(locale, pageCmsId);
   

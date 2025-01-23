@@ -156,55 +156,34 @@ const updateAssociatedContentIds = (data, contentType) => {
   updateAssociatedContentOtherThanCardIds(data, contentType);
 };
 
+const fetchGraphQLData = async (client, query, variables = {}, fetchPolicy = 'no-cache') => {
+  const response = await client.query({
+    query,
+    variables,
+    fetchPolicy,
+  });
+
+  return response;
+};
+
 const getPageQueryData = async (pageCmsId, locale, client) => {
-  const mainContentResCard = await client.query({
-    query: pagePreview.queries.GET_PAGE_PREVIEW_WITH_MAIN_CONTENT_CARD,
-    variables: { pageCmsId, locale: locale}, fetchPolicy: 'no-cache' },
-  );
-  let mainContentRes = await client.query({
-    query: pagePreview.queries.GET_PAGE_PREVIEW_WITH_MAIN_CONTENT,
-    variables: { pageCmsId, locale: locale}, fetchPolicy: 'no-cache' },
-  );
 
-  const secondaryContentRes = await client.query({
-    query: pagePreview.queries.GET_PAGE_PREVIEW_SECONDARY_CONTENT,
-    variables: { pageCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
+  const queries = {
+    mainContentResCard: pagePreview.queries.GET_PAGE_PREVIEW_WITH_MAIN_CONTENT_CARD,
+    mainContentRes: pagePreview.queries.GET_PAGE_PREVIEW_WITH_MAIN_CONTENT,
+    secondaryContentRes: pagePreview.queries.GET_PAGE_PREVIEW_SECONDARY_CONTENT,
+    otherMainContentRes: pagePreview.queries.GET_PAGE_PREVIEW_OTHER_CONTENT_FOR_MAIN_CONTENT,
+    otherSecondaryContentRes: pagePreview.queries.GET_PAGE_PREVIEW_OTHER_CONTENT_FOR_SECONDARY_CONTENT,
+    pageConnectiveTissueBasicInfo: pagePreview.queries.GET_PAGE_CONNECTIVE_TISSUE_BASIC_INFO,
+  };
 
-  const otherMainContentRes = await client.query({
-    query: pagePreview.queries.GET_PAGE_PREVIEW_OTHER_CONTENT_FOR_MAIN_CONTENT,
-    variables: { pageCmsId, locale }, fetchPolicy: 'no-cache' },
+  const results = {};
+  await Promise.all(
+    Object.entries(queries).map(async ([key, query]) => {
+      results[key] = await fetchGraphQLData(client, query, { pageCmsId, locale });
+    })
   );
-
-  const otherSecondaryContentRes = await client.query({
-    query: pagePreview.queries.GET_PAGE_PREVIEW_OTHER_CONTENT_FOR_SECONDARY_CONTENT,
-    variables: { pageCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
-
-  const pageConnectiveTissueBasicInfo = await client.query({
-    query: pagePreview.queries.GET_PAGE_CONNECTIVE_TISSUE_BASIC_INFO,
-    variables: { pageCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
-
-  async function fetchGraphQLData(query, variables) {
-    try {
-      const response = await client.query({
-        query,
-        variables,
-        fetchPolicy: 'no-cache',
-      });
-  
-      // Extract data and error from the response
-      const { data, error } = response;
-      const loading = false; // Since we're using `client.query`, we manage loading manually
-  
-      return { data, error, loading };
-    } catch (err) {
-      // Handle any errors in the query execution
-      console.error("Query failed:", err);
-      return { data: null, error: err, loading: false };
-    }
-  }
+  const { mainContentRes, mainContentResCard, secondaryContentRes, otherMainContentRes, otherSecondaryContentRes, pageConnectiveTissueBasicInfo} = results;
 
   const isContentLoading = () => (
     mainContentRes.loading
@@ -213,18 +192,6 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     || otherMainContentRes.loading
     || otherSecondaryContentRes.loading
     || pageConnectiveTissueBasicInfo.loading
-    || topConnectiveTissueLoading
-    || bottomConnectiveTissueLoading
-
-    || cardVideoAssociatedContentLoading
-    || otherCardVideoAssociatedContentLoading
-    || cardImageAssociatedContentLoading
-    || otherCardImageAssociatedContentLoading
-
-    || videoAssociatedContentLoading
-    || otherVideoAssociatedContentLoading
-    || imageAssociatedContentLoading
-    || otherImageAssociatedContentLoading
   );
 
   const getErrorInContent = () => (
@@ -234,20 +201,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     || otherMainContentRes.error
     || otherSecondaryContentRes.error
     || pageConnectiveTissueBasicInfo.error
-    || bottomConnectiveTissueError
-    || topConnectiveTissueError
-
-    || cardVideoAssociatedContentError
-    || otherCardVideoAssociatedContentError
-    || cardImageAssociatedContentError
-    || otherCardImageAssociatedContentError
-
-    || videoAssociatedContentError
-    || otherVideoAssociatedContentError
-    || imageAssociatedContentError
-    || otherImageAssociatedContentError
   );
-
 
   if (!mainContentRes.loading && isEmpty(mainContentRes.error) && !isEmpty(mainContentRes.data)) {
     updateAssociatedContentIds(mainContentRes, 'mainContent');
@@ -264,175 +218,191 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
   const isMainContentResSuccess = !mainContentRes.loading && isEmpty(mainContentRes.error) && !isEmpty(mainContentRes.data)
 
   const mainContentResCardSuccess = !mainContentResCard.loading && isEmpty(mainContentResCard.error) && !isEmpty(mainContentResCard.data)
-  let mainContentVideoData = undefined;
-  let otherMainContentVideoData = undefined;
-  let topConnectiveTissueData = undefined;
-  let bottomConnectiveTissueData = undefined;
-  let secondaryContentVideoData = undefined;
-  let secondaryContentImageData = undefined;
-  let mainContentImageData = undefined;
-  let otherSecondaryContentVideoData = undefined;
-  let otherSecondaryContentImageData = undefined;
-  let otherMainContentImageData = undefined;
-  let cardVideoAssociatedContentData = undefined;
-  let otherCardVideoAssociatedContentData = undefined;
-  let cardImageAssociatedContentData = undefined;
-  let otherCardImageAssociatedContentData = undefined;
-  let videoAssociatedContentData = undefined;
-  let otherVideoAssociatedContentData = undefined;
-  let imageAssociatedContentData = undefined;
-  let otherImageAssociatedContentData = undefined;
 
-  let bottomConnectiveTissueError = undefined;          
-  let topConnectiveTissueError = undefined;
-  let cardVideoAssociatedContentError = undefined;
-  let otherCardVideoAssociatedContentError = undefined;
-  let cardImageAssociatedContentError = undefined;
-  let otherCardImageAssociatedContentError = undefined;
-  let videoAssociatedContentError = undefined;
-  let otherVideoAssociatedContentError = undefined;
-  let imageAssociatedContentError = undefined;
-  let otherImageAssociatedContentError = undefined;
+
+  const contentData = {
+    mainContentVideoData: null,
+    otherMainContentVideoData: null,
+    secondaryContentVideoData: null,
+    otherSecondaryContentVideoData: null,
+
+    secondaryContentImageData: null,
+    otherSecondaryContentImageData: null,
+    mainContentImageData: null,
+    otherMainContentImageData: null,
+
+    topConnectiveTissueData: null,
+    bottomConnectiveTissueData: null,
+
+    cardVideoAssociatedContentData: null,
+    otherCardVideoAssociatedContentData: null,
+
+    cardImageAssociatedContentData: null,
+    otherCardImageAssociatedContentData: null,
+
+    videoAssociatedContentData: null,
+    otherVideoAssociatedContentData: null,
+
+    imageAssociatedContentData: null,
+    otherImageAssociatedContentData: null,
+  };
 
   if (isMainContentResSuccess && mainContentResCardSuccess) {
     const videosReference = findVideoReference(mainContentRes.data.pagev4.main_content.components);
 
     const videosReferenceCard = findVideoReference(mainContentResCard.data.pagev4.main_content.components);
 
-    const videosReferenceCmsIds = videosReference.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid);
+    const videosReferenceCmsIds = [
+      ...videosReference.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid),
+      ...videosReferenceCard.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid),
+    ];
 
-    const videosReferenceCardCmsIds = videosReferenceCard.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid);
-
-    const { data: mainContentData, error: mainContentError, loading: mainContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, {
-      videosReferenceCmsIds: [...videosReferenceCmsIds, ...videosReferenceCardCmsIds],
-      locale,
-    });
-
-    if (mainContentData) {
-        mainContentVideoData = mainContentData;
+    const [mainContentVideoDataQuery, otherMainContentVideoDataQuery] = await Promise.all([
+      fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+      fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+    ]);
+    if (mainContentVideoDataQuery.data) {
+      contentData.mainContentVideoData = mainContentVideoDataQuery.data;
     }
-
-    const { data: otherContentData, error: otherContentError, loading: otherContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, {
-      videosReferenceCmsIds: [...videosReferenceCmsIds, ...videosReferenceCardCmsIds],
-      locale,
-    });
-
- 
-    if (otherContentData) {
-      otherMainContentVideoData = otherContentData;
+  
+    if (otherMainContentVideoDataQuery.data) {
+      contentData.otherMainContentVideoData = otherMainContentVideoDataQuery.data;
     }
   }
 
   if (!secondaryContentRes.loading && isEmpty(secondaryContentRes.error) && !isEmpty(secondaryContentRes.data)) {
     const videosReference = findVideoReference(secondaryContentRes.data.pagev4.secondary_content.components);
     const videosReferenceCmsIds = videosReference.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid);
-    
-    const { data: secondaryContentData, error: secondaryContentError, loading: secondaryContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds, locale });
 
-    if (secondaryContentData) {
-      secondaryContentVideoData = secondaryContentData;
+    const [secondaryContentVideoQuery, otherSecondaryContentVideoDataQuery] = await Promise.all([
+      fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+      fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+    ]);
+
+    if (secondaryContentVideoQuery.data) {
+      contentData.secondaryContentVideoData = secondaryContentVideoQuery.data;
     }
 
-    const { data: otherContentData, error: otherSecondaryContentVideoError, loading: otherSecondaryContentVideoLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { videosReferenceCmsIds, locale });
-
-    if (otherContentData) {
-      otherSecondaryContentVideoData = otherContentData;
+    if (otherSecondaryContentVideoDataQuery.data) {
+      contentData.otherSecondaryContentVideoData = otherSecondaryContentVideoDataQuery.data;
     }
   }
 
-  
   if (!pageConnectiveTissueBasicInfo.loading && isEmpty(pageConnectiveTissueBasicInfo.error)) {
     const topConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.top_connective_tissueConnection.edges;
-    if (!isEmpty(topConnectiveTissueConnection) && !topConnectiveTissueData) {
-      
-      const topConnectiveTissueCmsId = topConnectiveTissueConnection[0].node.system.uid;
-      var topConnectiveTissueLoading = true;
-      const { data: topConnectiveTissue, error: topConnectiveTissueError, loading: connectiveLoading } = await fetchGraphQLData(pagePreview.queries.GET_CONNECTIVE_TISSUE, { connectiveTissueCmsId: topConnectiveTissueCmsId, locale } );
-      
-      if (topConnectiveTissue) {
-        topConnectiveTissueData = topConnectiveTissue;
-        topConnectiveTissueLoading = connectiveLoading
-      }
-    }
-    
-    if (topConnectiveTissueData) {
-      updateAssociatedContentIds(topConnectiveTissueData, 'topConnectiveTissue');
-    }
-    
-    var bottomConnectiveTissueLoading = true;
-    const bottomConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges;
-    if (!isEmpty(bottomConnectiveTissueConnection) && !bottomConnectiveTissueData) {
-      const bottomConnectiveTissueCmsId = bottomConnectiveTissueConnection[0].node.system.uid;
-      const { data: bottomConnectiveTissue, error: bottomConnectiveTissueError, loading: bottomLoading } = await fetchGraphQLData(pagePreview.queries.GET_CONNECTIVE_TISSUE, { connectiveTissueCmsId: bottomConnectiveTissueCmsId, locale });
+    if (!isEmpty(topConnectiveTissueConnection)) {
+      const connectiveTissueCmsId = topConnectiveTissueConnection[0].node.system.uid;
 
-      if (bottomConnectiveTissue) {
-        bottomConnectiveTissueData = bottomConnectiveTissue;
-        bottomConnectiveTissueLoading = bottomLoading;
+      const [topConnectiveTissueDataQuery] = fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
+        connectiveTissueCmsId,
+        locale,
+      })
+
+      if (topConnectiveTissueDataQuery.data) {
+        contentData.topConnectiveTissueData = topConnectiveTissueDataQuery.data;
+        updateAssociatedContentIds(topConnectiveTissueDataQuery.data, 'topConnectiveTissue');
       }
     }
-    if (bottomConnectiveTissueData) {
-      updateAssociatedContentIds(bottomConnectiveTissueData, 'bottomConnectiveTissue');
+    
+    const bottomConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges;
+    if (!isEmpty(bottomConnectiveTissueConnection)) {
+      const connectiveTissueCmsId = bottomConnectiveTissueConnection[0].node.system.uid;
+
+      const [bottomConnectiveTissueDataQuery] =  fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
+        connectiveTissueCmsId,
+        locale,
+      })
+
+      if (bottomConnectiveTissueDataQuery.data) {
+        contentData.bottomConnectiveTissueData = bottomConnectiveTissueDataQuery.data;
+        updateAssociatedContentIds(bottomConnectiveTissueDataQuery.data, 'bottomConnectiveTissue');
+      }
     }
   }
 
-
-  var cardVideoAssociatedContentLoading = undefined;
-  var otherCardVideoAssociatedContentLoading = undefined; 
-  var cardImageAssociatedContentLoading = undefined;
-  var otherCardImageAssociatedContentLoading = undefined;
-  var videoAssociatedContentLoading = undefined;
-  var otherVideoAssociatedContentLoading = undefined;
-  var imageAssociatedContentLoading = undefined;
-  var otherImageAssociatedContentLoading = undefined;
-    
   if (!isContentLoading() && !getErrorInContent()) {
+    const cardVideoAssociatedContentDataQuery = fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
 
-    const { data: videoData, error: bottomConnectiveTissueError, loading: videoLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
-
-    if (videoData) {
-      cardVideoAssociatedContentData = videoData;
+    if (cardVideoAssociatedContentDataQuery.data) {
+      contentData.cardVideoAssociatedContentData = cardVideoAssociatedContentDataQuery.data;
     }
 
-    const { data: cardVideoAssociatedContent, error: otherCardVideoAssociatedContentError, loading: otherCardVideoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
+    const otherCardVideoAssociatedContentDataQuery = fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
 
-    if (cardVideoAssociatedContent) {
-      otherCardVideoAssociatedContentData = cardVideoAssociatedContent;
+    if (otherCardVideoAssociatedContentDataQuery.data) {
+      contentData.otherCardVideoAssociatedContentData = otherCardVideoAssociatedContentDataQuery.data;
     }
 
-    const { data: cardImageAssociatedContent, error: cardImageAssociatedContentError, loading: cardImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_IMAGE_DATA,{ imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
-
-    if (cardImageAssociatedContent) {
-      cardImageAssociatedContentData = cardImageAssociatedContent;
+    const cardImageAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_IMAGE_DATA,
+      { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
+    );
+    
+    if (cardImageAssociatedContentQuery.data) {
+      contentData.cardImageAssociatedContentData = cardImageAssociatedContentQuery.data;
     }
 
-    const { data: otherCardImageAssociatedContent, error: otherCardImageAssociatedContentError, loading: otherCardImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA,{ imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
-
-    if (otherCardImageAssociatedContent) {
-      otherCardImageAssociatedContentData = otherCardImageAssociatedContent;
+    const otherCardImageAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA,
+      { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
+    );
+    
+    if (otherCardImageAssociatedContentQuery.data) {
+      contentData.otherCardImageAssociatedContentData = otherCardImageAssociatedContentQuery.data;
     }
 
-    const { data: videoAssociatedContent, error: videoAssociatedContentError, loading: videoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
-
-    if (videoAssociatedContent) {
-      videoAssociatedContentData = videoAssociatedContent;
+    const videoAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_VIDEO_DATA,
+      { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale }
+    );
+    
+    if (videoAssociatedContentQuery.data) {
+      contentData.videoAssociatedContentData = videoAssociatedContentQuery.data;
     }
 
-    const { data: otherVideoAssociatedContent, error: otherVideoAssociatedContentError, loading: otherVideoAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale } );
-
-    if (otherVideoAssociatedContent) {
-      otherVideoAssociatedContentData = otherVideoAssociatedContent;
+    const otherVideoAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
+      { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale }
+    );
+    
+    if (otherVideoAssociatedContentQuery.data) {
+      contentData.otherVideoAssociatedContentData = otherVideoAssociatedContentQuery.data;
     }
 
-    const { data: imageAssociatedContent, error: imageAssociatedContentError, loading: imageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
-
-    if (imageAssociatedContent) {
-      imageAssociatedContentData = imageAssociatedContent;
+    const imageAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
+      { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
+    );
+    
+    if (imageAssociatedContentQuery.data) {
+      contentData.imageAssociatedContentData = imageAssociatedContentQuery.data;
     }
-
-    const { data: otherImageAssociatedContent, error: otherImageAssociatedContentError, loading: otherImageAssociatedContentLoading } = await fetchGraphQLData(pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA, { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale } );
-
-    if (otherImageAssociatedContent) {
-      otherImageAssociatedContentData = otherImageAssociatedContent;
+    
+    const otherImageAssociatedContentQuery = fetchGraphQLData(
+      client,
+      pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
+      { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
+    );
+    
+    if (otherImageAssociatedContentQuery.data) {
+      contentData.otherImageAssociatedContentData = otherImageAssociatedContentQuery.data;
     }
 
   }
@@ -444,39 +414,13 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     otherMainContentData: otherMainContentRes.data,
     otherSecondaryContentData: otherSecondaryContentRes.data,
     pageConnectiveTissueBasicInfoData: pageConnectiveTissueBasicInfo.data,
-    isTopConnectiveTissue: (
-      pageConnectiveTissueBasicInfo.data
-      && !isEmpty(pageConnectiveTissueBasicInfo.data.pagev4.top_connective_tissueConnection.edges)
-    ),
-    isBottomConnectiveTissue: (
-      pageConnectiveTissueBasicInfo.data
-      && !isEmpty(
-        pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges,
-      )
-    ),
-
-    topConnectiveTissueData,
-    bottomConnectiveTissueData,
-    secondaryContentVideoData,
-    secondaryContentImageData,
-    mainContentImageData,
-    mainContentVideoData,
-    otherSecondaryContentVideoData,
-    otherSecondaryContentImageData,
-    otherMainContentImageData,
-    otherMainContentVideoData,
-
-    cardVideoAssociatedContentData,
-    otherCardVideoAssociatedContentData,
-    cardImageAssociatedContentData,
-    otherCardImageAssociatedContentData,
-
+    isTopConnectiveTissue: pageConnectiveTissueBasicInfo.data
+      && !isEmpty(pageConnectiveTissueBasicInfo.data.pagev4.top_connective_tissueConnection.edges),
+  
+    isBottomConnectiveTissue: pageConnectiveTissueBasicInfo.data
+      && !isEmpty(pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges),
+    ...contentData,
     imageVideoAssociatedRecords,
-
-    videoAssociatedContentData,
-    otherVideoAssociatedContentData,
-    imageAssociatedContentData,
-    otherImageAssociatedContentData,
     error: getErrorInContent(),
   };
 };

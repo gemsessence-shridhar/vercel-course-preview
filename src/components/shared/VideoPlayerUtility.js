@@ -92,8 +92,8 @@ const getVideoDomManipulationInfo = (player) => {
 
   if (player.controlBar.el()) {
     const controlBar = player.controlBar.el();
-    if (parentDiv) {
-      parentDiv.removeChild(controlBar);
+    if (parentDiv && parentDiv.contains(controlBar)) {
+        parentDiv.removeChild(controlBar);
     }
   }
 

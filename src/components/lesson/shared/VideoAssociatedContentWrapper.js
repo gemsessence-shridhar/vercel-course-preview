@@ -81,7 +81,6 @@ const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitles }) => 
       )
       : null
   );
-  console.log("999999999999999999999999999999", subtitles)
 
   return (
     <PageWrapper
