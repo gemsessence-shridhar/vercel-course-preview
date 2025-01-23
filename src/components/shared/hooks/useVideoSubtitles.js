@@ -1,22 +1,22 @@
-import { pagePreview } from "../../../graphql_states/contentstack";
-import { isNil, map } from 'lodash'
-import createApolloClient from "../../../../apollo_client";
+// import { pagePreview } from "../../../graphql_states/contentstack";
+// import { isNil, map } from 'lodash'
+// import createApolloClient from "../../../../apollo_client";
 
 
-const mapSubtitles = (subtitleCmsId, data) => {
-  const locales = JSON.parse(process.env.APP_LOCALE)
-  data = data.filter((d) => !isNil(d.subtitles))
+// const mapSubtitles = (subtitleCmsId, data) => {
+//   const locales = JSON.parse(process.env.APP_LOCALE)
+//   data = data.filter((d) => !isNil(d.subtitles))
 
-  return map(data, ({subtitles, locale}) => ({
-    title: subtitles.title,
-    id: subtitleCmsId,
-    language: locale,
-    label: locales[locale],
-    url: subtitles.fileConnection.edges[0] && subtitles.fileConnection.edges[0].node.url,
-  }))
-}
+//   return map(data, ({subtitles, locale}) => ({
+//     title: subtitles.title,
+//     id: subtitleCmsId,
+//     language: locale,
+//     label: locales[locale],
+//     url: subtitles.fileConnection.edges[0] && subtitles.fileConnection.edges[0].node.url,
+//   }))
+// }
 
-export const useVideoSubTitles = async (subtitleCmsId) => {
+export const useVideoSubTitles = async () => {
   // const client = createApolloClient();
 
   // const enUsSubtitleData = await client.query({

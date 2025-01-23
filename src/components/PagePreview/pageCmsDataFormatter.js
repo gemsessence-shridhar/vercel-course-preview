@@ -287,7 +287,6 @@ const formateContentComponent = (mainContentData, cardDetails) => {
   // 14: {__typename: "PageComponentsComponentsVideoReference", video_reference: {…}}
   // 15: {__typename: "PageComponentsComponentsCardReference", card_reference: {…}}
 
-  // eslint-disable-next-line no-underscore-dangle
   const typeName = mainContentData.__typename;
   switch (typeName) {
     case 'PageComponentsComponentsTextReference':
@@ -338,7 +337,6 @@ const getFormattedCardComponents = (cardComponents, cardDetails) => {
   return result.length === 0 ? [] : result;
 };
 
-// eslint-disable-next-line no-underscore-dangle
 const isShowSecondaryContent = (card) => ((!isEmpty(card) && card.show_secondary_content_) ? card.show_secondary_content_ : false);
 
 const getCardSecondaryContentPosition = (card) => ({
@@ -454,7 +452,7 @@ const removeNullWithObject = (collection, otherCollection) => (
 const removeNullContents = (collection, otherCollection) => {
   const finalContent = removeNullWithObject(collection, otherCollection);
   const filteredCollection = finalContent.filter((el) => el != null);
-  return (filteredCollection.map((content, index) => {
+  return (filteredCollection.map((content) => {
     if (content.type === CARD_REFERENCE) {
       const cardComponent = otherCollection.find((_collection) => _collection && _collection.id === content.id);
       content.components = cardComponent && removeNullWithObject(content.components, cardComponent.components);
@@ -463,7 +461,6 @@ const removeNullContents = (collection, otherCollection) => {
   }));
 };
 
-// eslint-disable-next-line max-len
 const getDisplayTitle = (pageData) => ((pageData.hide_title === true) ? null : pageData.display_title);
 
 const getFormattedImageAssociatedContents = (contentData, otherContentData, cardDetails) => {
@@ -557,184 +554,6 @@ const getFormattedVideoAssociatedContents = (contentData, otherContentData, card
       });
     })
   );
-};
-
-const getPageComponents = (type, data) => {
-  let components = [];
-  switch (type) {
-    case 'mainContent':
-      components = data.main_content.components;
-      break;
-    case 'secondaryContent':
-      components = data.secondary_content.components;
-      break;
-    case 'bottomConnectiveTissue':
-      components = data.connective_tissue.connective_tissue.components;
-      break;
-    case 'topConnectiveTissue':
-      components = data.connective_tissue.connective_tissue.components;
-      break;
-    case 'card':
-      components = data.components.components;
-      break;
-    default:
-      components = [];
-  }
-  return components;
-};
-
-const getFormattedPageComponents = (type, data, components) => {
-  let updatedData = {};
-
-  switch (type) {
-    case 'mainContent':
-      updatedData = {
-        ...data,
-        main_content: {
-          ...data.main_content,
-          components: [
-            ...components,
-          ],
-        },
-      };
-      break;
-    case 'secondaryContent':
-      updatedData = {
-        ...data,
-        secondary_content: {
-          ...data.secondary_content,
-          components: [
-            ...components,
-          ],
-        },
-      };
-      break;
-    case 'bottomConnectiveTissue':
-      updatedData = {
-        ...data,
-        connective_tissue: {
-          ...data.connective_tissue,
-          connective_tissue: {
-            components: [
-              ...components,
-            ],
-          },
-        },
-      };
-      break;
-    case 'topConnectiveTissue':
-      updatedData = {
-        ...data,
-        connective_tissue: {
-          ...data.connective_tissue,
-          connective_tissue: {
-            components: [
-              ...components,
-            ],
-          },
-        },
-      };
-      break;
-    case 'card':
-      updatedData = {
-        ...data,
-        components: {
-          ...data.components,
-          components: [
-            ...components,
-          ],
-        },
-      };
-      break;
-    default:
-      updatedData = {};
-  }
-  return updatedData;
-};
-
-const mergeContentData = (pageData, formattedAssociatedContents, type) => {
-  if (isEmpty(pageData)) return {};
-
-  const pageComponents = getPageComponents(type, pageData);
-  const components = pageComponents.map((obj) => {
-    if (obj.__typename === 'PageComponentsComponentsImageReference') {
-      const imageNode = obj.image_reference.imageConnection.edges[0].node;
-      const imageFormattedNode = formattedAssociatedContents.find((imageAssociatedObj) => imageAssociatedObj
-        .cms_id === imageNode.system.uid);
-      obj = {
-        ...obj,
-        image_reference: {
-          ...obj.image_reference,
-          imageConnection: {
-            ...obj.image_reference.imageConnection,
-            edges: [{
-              ...obj.image_reference.imageConnection.edges[0],
-              node: {
-                ...obj.image_reference.imageConnection.edges[0].node, ...imageFormattedNode,
-              },
-            }],
-          },
-        },
-      };
-    }
-    if (obj.__typename === 'PageComponentsComponentsVideoReference') {
-      const videoNode = obj.video_reference.videoConnection.edges[0].node;
-      const videoFormattedNode = formattedAssociatedContents.find((videoAssociatedObj) => videoAssociatedObj
-        .cms_id === videoNode.system.uid);
-      obj = {
-        ...obj,
-        video_reference: {
-          ...obj.video_reference,
-          videoConnection: {
-            ...obj.video_reference.videoConnection,
-            edges: [{
-              ...obj.video_reference.videoConnection.edges[0],
-              node: {
-                ...obj.video_reference.videoConnection.edges[0].node, ...videoFormattedNode,
-              },
-            }],
-          },
-        },
-      };
-    }
-    return obj;
-  });
-
-  return getFormattedPageComponents(type, pageData, components);
-};
-
-const mergeCardContentData = (pageData, formattedImageAssociatedCardMainComps, contentType) => {
-  if (isEmpty(formattedImageAssociatedCardMainComps)) return pageData;
-
-  const updatedPageData = { ...pageData };
-
-  const formattedCardComponents = getPageComponents(contentType, updatedPageData)
-    .map((component) => {
-      if (component.__typename !== 'PageComponentsComponentsCardReference') return component;
-
-      const cardNode = component.card_reference.cardConnection.edges[0].node;
-      const updatedNode = mergeContentData(cardNode, formattedImageAssociatedCardMainComps, 'card');
-
-      return {
-        ...component,
-        card_reference: {
-          ...component.card_reference,
-          cardConnection: {
-            ...component.card_reference.cardConnection,
-            edges: [{
-              ...component.card_reference.cardConnection.edges,
-              ...component.card_reference.cardConnection.edges[0],
-              node: {
-                ...component.card_reference.cardConnection.edges[0].node,
-                ...updatedNode,
-              },
-            }],
-          },
-        },
-      };
-    });
-
-  return getFormattedPageComponents(contentType, updatedPageData, formattedCardComponents);
 };
 
 const updateImageVideoAssociatedRecords = (

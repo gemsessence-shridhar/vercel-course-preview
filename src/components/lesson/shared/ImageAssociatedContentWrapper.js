@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Image } from 'react-bootstrap';
 import { isEmpty } from 'lodash';
-import styled from 'styled-components';
-
 import PageWrapper from '../../shared/page_wrapper';
 import TextReference from '../TextReference';
 import InlineText from '../InlineText';

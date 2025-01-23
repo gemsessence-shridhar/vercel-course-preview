@@ -22,7 +22,6 @@ const CardReference = ({
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
-  isConnectiveTissue,
   setCurrentQuestionId,
   setUserAnswers,
   setCurrentSurveyQuestionId,

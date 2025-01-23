@@ -26,7 +26,7 @@ const useSuperScript = () => {
     allTextNodes.forEach((node) => {
       updateSupNodeHtml(node);
     });
-  }, []);
+  });
 };
 
 export default useSuperScript;

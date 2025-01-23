@@ -112,7 +112,7 @@ const getQuality = (currentQuality) => {
   return qualityLabel;
 };
 
-const getSelectedQualityLabel = (quality, parentControlBar, loading) => {
+const getSelectedQualityLabel = (quality, parentControlBar) => {
   const qualityButton = parentControlBar.hlsQualitySelector._qualityButton.el();
   const qualitySpn = qualityButton.getElementsByClassName('vjs-icon-placeholder')[0];
 

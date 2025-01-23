@@ -7,7 +7,7 @@ import {
 import CircularProgressBarContainer from '../assessment_question/CircularProgressBarContainer';
 
 const getItemSvgSrc = ({
-  itemData, classes, circularProgressBar = false, iconHeight = '25px', iconWidth = '25px', circularProgressBarPercentage, tickMarkIconColor,
+  itemData, circularProgressBar = false, circularProgressBarPercentage, tickMarkIconColor,
 }) => {
   let itemSvg = <LockIcon />;
   switch (itemData.status) {

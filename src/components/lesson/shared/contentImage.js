@@ -4,15 +4,6 @@ import classNames from 'classnames';
 import { isEmpty } from 'lodash';
 import styles from '../lesson-page.module.scss';
 import PageWrapper from '../../shared/page_wrapper';
-import TextReference from '../TextReference';
-import InlineText from '../InlineText';
-import QuoteReference from '../QuoteReference';
-import TestimonialReference from '../TestimonialReference';
-import TipReference from '../TipReference';
-import ContentVideo from './contentVideo';
-import SurveyQuestionReference from '../SurveyQuestionReference';
-import QuestionReference from '../QuestionReference';
-import LearningResource from '../LearningResource';
 import ImageAssociatedContentWrapper from './ImageAssociatedContentWrapper';
 
 const ContentImage = ({
@@ -33,64 +24,6 @@ const ContentImage = ({
       secondaryPosition = content.associatedTextPosition;
     }
   }
-
-  const getInnerContent = (contentData, keyProp) => {
-    if (contentData === null) return '';
-
-    switch (contentData.__typename) {
-      case 'TextReference':
-        return (
-          <TextReference key={keyProp} content={contentData} />
-        );
-      case 'InlineText':
-        return (
-          <InlineText key={keyProp} content={contentData} />
-        );
-      case 'QuoteReference':
-        return (
-          <QuoteReference key={keyProp} content={contentData} />
-        );
-      case 'TestimonialReference':
-        return (
-          <TestimonialReference key={keyProp} content={contentData} />
-        );
-      case 'TipReference':
-        return (
-          <TipReference key={keyProp} content={contentData} />
-        );
-      case 'VideoReference':
-        return <ContentVideo key={keyProp} content={contentData} />;
-      case 'QuestionReference':
-        if (contentData.question && currentQuestionId === contentData.question.id) {
-          return (
-            <QuestionReference
-              key={keyProp}
-              content={contentData.question}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
-            />
-          );
-        }
-        return ('');
-      case 'SurveyQuestionReference':
-        if (contentData.surveyQuestion && currentSurveyQuestionId === contentData.surveyQuestion.id) {
-          return (
-            <SurveyQuestionReference
-              key={keyProp}
-              content={contentData.surveyQuestion}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
-            />
-          );
-        }
-        return ('');
-      case 'LearningResource':
-        return (<LearningResource key={keyProp} content={contentData} courseId={courseId} />);
-      default: return <div key={keyProp} dangerouslySetInnerHTML={{ __html: contentData.text }} />;
-    }
-  };
 
   return (
     <PageWrapper

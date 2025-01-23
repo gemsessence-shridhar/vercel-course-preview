@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import CheckIcon from '@mui/icons-material/Check';
 import PropTypes from 'prop-types';
 
 import styles from './option-style.module.scss';

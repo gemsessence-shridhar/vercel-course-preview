@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
-
 import PageWrapper from '../../shared/page_wrapper';
 import VideoAssociatedContentWrapper from './VideoAssociatedContentWrapper';
 import Loader from '../../shared/Loader';
-import AlertMessage from '../../shared/AlertMessage';
 import { useVideoSubTitles } from '../../shared/hooks/useVideoSubtitles';
 
 const ContentVideo = ({ content }) => {
