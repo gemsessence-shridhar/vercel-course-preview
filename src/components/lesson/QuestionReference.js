@@ -12,8 +12,7 @@ const QuestionReference = ({
   content,
   setSelectedAnswers,
   userAnswers,
-  selectedAnswers,
-  isOldSubmittedQuestionAnswerChanged,
+  selectedAnswers
 }) => {
   useSuperScript();
 
@@ -62,17 +61,6 @@ const QuestionReference = ({
         <h4 data-testid="question-heading" className={styles['question-heading']}>
           {content.question}
         </h4>
-        {
-          isOldSubmittedQuestionAnswerChanged
-            ? (
-              <div className={styles['change-submitted-question-answer']}>
-                {/* need to fix */}
-                {/* <FormattedMessage id="page.question.noteForChangedQuestionSubmittedAnswer" /> */}
-                <h1>This is a new version of the question previously presented on this page. Please select your answer and submit to see question feedback!</h1>
-              </div>
-            )
-            : null
-        }
         {content.answers.map((answer) => (
           <LessonAnswersBlock
             key={answer.id}

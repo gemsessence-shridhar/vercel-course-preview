@@ -1,5 +1,5 @@
 import { isEmpty, uniq } from 'lodash';
-import { pagePreview } from '../../graphql_states/contentstack';
+import { pagePreview } from '@graphql/contentstack';
 
 const imageVideoAssociatedRecords = {
   imageIds: [],
@@ -425,53 +425,6 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
   };
 };
 
-const getCourseQuery = (courseType) => {
-  let query = null;
-  switch (courseType) {
-    case 'l2':
-      query = pagePreview.queries.GET_LEVEL_TWO_COURSE_WITH_BASIC_INFO;
-      break;
-    case 'l3':
-      query = pagePreview.queries.GET_LEVEL_THREE_COURSE_WITH_BASIC_INFO;
-      break;
-    default:
-  }
-
-  return query;
-};
-
-const useCourseQueries = (
-  courseType,
-  courseCmsId,
-  levelTwoCollectionCmsId,
-  levelOneCollectionCmsId,
-  locale,
-) => {
-  const courseRes = client.query({
-    query: getCourseQuery(courseType),
-    variables: { courseCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
-
-  const levelTwoCollectionRes = client.query({
-    query: pagePreview.queries.GET_LEVEL_TWO_COLLECTION_WITH_BASIC_INFO,
-    variables: { levelTwoCollectionCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
-
-  const levelOneCollectionRes = client.query({
-    query: pagePreview.queries.GET_LEVEL_ONE_COLLECTION_WITH_BASIC_INFO,
-    variables: { levelOneCollectionCmsId, locale }, fetchPolicy: 'no-cache' },
-  );
-
-  return {
-    loading: courseRes.loading || levelTwoCollectionRes.loading || levelOneCollectionRes.loading,
-    courseData: courseRes.data,
-    levelTwoCollectionData: levelTwoCollectionRes.data,
-    levelOneCollectionData: levelOneCollectionRes.data,
-    error: courseRes.error || levelTwoCollectionRes.error || levelOneCollectionRes.error,
-  };
-};
-
 export {
-  getPageQueryData,
-  useCourseQueries,
+  getPageQueryData
 };

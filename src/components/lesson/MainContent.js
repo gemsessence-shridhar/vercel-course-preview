@@ -16,7 +16,6 @@ const MainContent = ({
   setCurrentQuestionId,
   setUserAnswers,
   setCurrentSurveyQuestionId,
-  isOldSubmittedQuestionAnswerChanged,
 }) => {
   const renderContent = (content, index) => (
     <PageComponentsComponent
@@ -31,7 +30,6 @@ const MainContent = ({
       setCurrentQuestionId={setCurrentQuestionId}
       setUserAnswers={setUserAnswers}
       setCurrentSurveyQuestionId={setCurrentSurveyQuestionId}
-      isOldSubmittedQuestionAnswerChanged={isOldSubmittedQuestionAnswerChanged}
     />
   );
 

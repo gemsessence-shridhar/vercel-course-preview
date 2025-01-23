@@ -26,7 +26,6 @@ const PageComponentsComponent = ({
   setCurrentQuestionId,
   setUserAnswers,
   setCurrentSurveyQuestionId,
-  isOldSubmittedQuestionAnswerChanged,
 }) => {
   useSuperScript();
 
@@ -41,7 +40,6 @@ const PageComponentsComponent = ({
             setSelectedAnswers={setSelectedAnswers}
             userAnswers={userAnswers}
             selectedAnswers={selectedAnswers}
-            isOldSubmittedQuestionAnswerChanged={isOldSubmittedQuestionAnswerChanged}
           />
         );
       }
