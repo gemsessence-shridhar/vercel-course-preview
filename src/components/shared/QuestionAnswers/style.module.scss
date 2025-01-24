@@ -1,0 +1,110 @@
+.feedback-container {
+  font-family: "Open Sans";
+  font-size: 18px;
+  padding-left: 10px;
+  .correct-feedback-label {
+    color: #72BE1D;
+    font-weight: 600;
+  }
+  .incorrect-feedback-label {
+    color: #D20000;
+    font-weight: 600;
+  }
+}
+.incorrect-answer-border {
+  border: 1px solid #D20000;
+}
+.correct-answer-border {
+  border: 1px solid #72BE1D;
+}
+.incorrect-label-container {
+  color: #D20000;
+  padding-left: 10px;
+  .incorrect-label {
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+.correct-label-container {
+  color: #72BE1D;
+  padding-left: 10px;
+  .correct-label {
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+.select-all-correct-answer-label-container {
+  border-radius: 4px;
+  background-color: rgba(78, 169, 251, 0.07);
+  padding: 11px 15px;
+  color: #4EA9FB;
+  font-size: 13px;
+  letter-spacing: 0;
+  line-height: 21px;
+  display: flex;
+  align-items: center;
+  border: 0;
+  & > svg {
+    margin-right: 8px;
+  }
+  button{
+    opacity: 1;
+    font-size: 18px;
+    &:focus{
+      outline: 0;
+      border: 0;
+    }
+  }
+}
+.feedback-container-bg-color {
+  border-radius: 7px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 16px 5px #ede9e7;
+  position: relative;
+  margin-top: 1em;
+  overflow: hidden;
+  padding: 18px;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 19px;
+    background-color: #21154a;
+    box-shadow: 0 2px 47px 8px #ede9e7;
+    width: 6px;
+  }
+}
+.feedback-container-green-bg-color {
+  margin-top: 0;
+  &::before {
+    background-color: #72BE1D;
+  }
+}
+.feedback-container-red-bg-color {
+  margin-top: 0;
+  &::before {
+    background-color: #D20000;;
+  }
+}
+.checkbox-container {
+  display: inline-block;
+  margin-bottom: 15px;
+  flex: 0 0 30px;
+
+  i.checkbox-check-icon {
+    font-size: 20px !important;
+  }
+  i.checkbox-check-icon {
+    display: inline-block;
+    font-size: inherit;
+    text-rendering: auto;
+    width: 1em;
+  }
+}
+.text-label {
+  font-size: 17px !important;
+}
