@@ -13,7 +13,7 @@ import introspectionQueryResultData from './coursePreviewSchema';
 const buildUrl = () => (
   `${process.env.CONTENT_STACK_GQL_ENDPOINT}/stacks/${process.env.CONTENT_STACK_GQL_API_KEY}?environment=${process.env.CONTENT_STACK_GQL_ENVIRONMENT}`
 );
-
+console.log("============================================", buildUrl)
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData,
 });
