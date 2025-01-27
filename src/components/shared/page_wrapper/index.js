@@ -8,7 +8,7 @@ import SecondaryColumn from './SecondaryColumn';
 const StyledPageWrapper = styled.div`
   ${(props) => css`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding-bottom: ${props.paddingBottom}em;
   position: relative;
   margin: 0 -15px;
