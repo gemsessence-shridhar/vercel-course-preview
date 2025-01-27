@@ -6,18 +6,23 @@ const imageVideoAssociatedRecords = {
   videoIds: [],
 };
 
+const findCardReference = (components) => {
+  if (!components || components.length === 0) return [];
 
-const findCardReference = (components) => (
-  components.filter((obj) => obj.__typename === 'PageComponentsComponentsCardReference' && !isEmpty(obj.card_reference))
-);
+  return components.filter((obj) => obj.__typename === 'PageComponentsComponentsCardReference' && !isEmpty(obj.card_reference));
+};
 
-const findImageReference = (components) => (
-  components.filter((obj) => obj.__typename === 'PageComponentsComponentsImageReference' && !isEmpty(obj.image_reference))
-);
+const findImageReference = (components) => {
+  if (!components || components.length === 0) return [];
 
-const findVideoReference = (components) => (
-  components.filter((obj) => obj.__typename === 'PageComponentsComponentsVideoReference' && !isEmpty(obj.video_reference))
-);
+  return components.filter((obj) => obj.__typename === 'PageComponentsComponentsImageReference' && !isEmpty(obj.image_reference));
+};
+
+const findVideoReference = (components) => {
+  if (!components || components.length === 0) return [];
+
+  return components.filter((obj) => obj.__typename === 'PageComponentsComponentsVideoReference' && !isEmpty(obj.video_reference));
+};
 
 const getCardComponents = (data, contentType) => {
   let componentRef = null;
@@ -305,22 +310,22 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     if (!isEmpty(topConnectiveTissueConnection)) {
       const connectiveTissueCmsId = topConnectiveTissueConnection[0].node.system.uid;
 
-      const [topConnectiveTissueDataQuery] = fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
+      const topConnectiveTissueDataQuery = await fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
         connectiveTissueCmsId,
         locale,
       })
 
       if (topConnectiveTissueDataQuery.data) {
-        contentData.topConnectiveTissueData = topConnectiveTissueDataQuery.data;
+        contentData.topConnectiveTissueData = await topConnectiveTissueDataQuery.data;
         updateAssociatedContentIds(topConnectiveTissueDataQuery.data, 'topConnectiveTissue');
       }
     }
     
-    const bottomConnectiveTissueConnection = pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges;
+    const bottomConnectiveTissueConnection = await pageConnectiveTissueBasicInfo.data.pagev4.bottom_connective_tissueConnection.edges;
     if (!isEmpty(bottomConnectiveTissueConnection)) {
       const connectiveTissueCmsId = bottomConnectiveTissueConnection[0].node.system.uid;
 
-      const [bottomConnectiveTissueDataQuery] =  fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
+      const bottomConnectiveTissueDataQuery =  await fetchGraphQLData(client, pagePreview.queries.GET_CONNECTIVE_TISSUE,  {
         connectiveTissueCmsId,
         locale,
       })
@@ -333,19 +338,19 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
   }
 
   if (!isContentLoading() && !getErrorInContent()) {
-    const cardVideoAssociatedContentDataQuery = fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
+    const cardVideoAssociatedContentDataQuery = await fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
 
     if (cardVideoAssociatedContentDataQuery.data) {
       contentData.cardVideoAssociatedContentData = cardVideoAssociatedContentDataQuery.data;
     }
 
-    const otherCardVideoAssociatedContentDataQuery = fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
+    const otherCardVideoAssociatedContentDataQuery = await fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
 
     if (otherCardVideoAssociatedContentDataQuery.data) {
       contentData.otherCardVideoAssociatedContentData = otherCardVideoAssociatedContentDataQuery.data;
     }
 
-    const cardImageAssociatedContentQuery = fetchGraphQLData(
+    const cardImageAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_IMAGE_DATA,
       { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
@@ -355,7 +360,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.cardImageAssociatedContentData = cardImageAssociatedContentQuery.data;
     }
 
-    const otherCardImageAssociatedContentQuery = fetchGraphQLData(
+    const otherCardImageAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_OTHER_CONTENT_FOR_IMAGE_DATA,
       { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
@@ -365,7 +370,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.otherCardImageAssociatedContentData = otherCardImageAssociatedContentQuery.data;
     }
 
-    const videoAssociatedContentQuery = fetchGraphQLData(
+    const videoAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_VIDEO_DATA,
       { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale }
@@ -375,7 +380,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.videoAssociatedContentData = videoAssociatedContentQuery.data;
     }
 
-    const otherVideoAssociatedContentQuery = fetchGraphQLData(
+    const otherVideoAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
       { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale }
@@ -385,7 +390,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.otherVideoAssociatedContentData = otherVideoAssociatedContentQuery.data;
     }
 
-    const imageAssociatedContentQuery = fetchGraphQLData(
+    const imageAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
       { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
@@ -395,7 +400,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.imageAssociatedContentData = imageAssociatedContentQuery.data;
     }
     
-    const otherImageAssociatedContentQuery = fetchGraphQLData(
+    const otherImageAssociatedContentQuery = await fetchGraphQLData(
       client,
       pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,
       { imagesReferenceCmsIds: uniq(imageVideoAssociatedRecords.imageIds), locale }
