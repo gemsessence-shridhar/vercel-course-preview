@@ -6,7 +6,6 @@ import hlsQualitySelector from 'videojs-hls-quality-selector';
 
 import 'video.js/dist/video-js.css';
 import './video-player.css';
-import Track from './track';
 import { getVideoDomManipulationInfo, getSelectedQualityLabel } from './VideoPlayerUtility';
 
 class VideoPlayer extends React.Component {
@@ -59,17 +58,13 @@ class VideoPlayer extends React.Component {
   }
 
   render() {
-    const { subtitles } = this.props;
-
     return (
       <div className="w-100">
         <div data-vjs-player>
           <video
             ref={(node) => this.videoNode = node}
             className="customize-video-player video-js vjs-big-play-centered"
-          >
-            <Track subtitles={subtitles} />
-          </video>
+          />
         </div>
       </div>
     );

@@ -185,6 +185,8 @@ const getFormattedLearningResource = (mainContentData, typeName) => {
   };
 };
 
+
+
 const getAssociatedContent = (contentId) => {
   let result = imageVideoAssociatedRecords
     .find((content) => content.cms_id === contentId);
@@ -230,9 +232,8 @@ const getFormattedImageReference = (mainContentData, typeName) => {
   };
 };
 
-const getFormattedVideoReference = (mainContentData, typeName) => {
+const getFormattedVideoReference = (mainContentData, typeName, subtitleData) => {
   if (isEmpty(mainContentData.video_reference)) return null;
-
   const videoReference = mainContentData.video_reference;
   const associatedText = videoReference.associated_text;
   const video = nodes(videoReference.videoConnection)[0];
@@ -246,7 +247,7 @@ const getFormattedVideoReference = (mainContentData, typeName) => {
 
   const associatedContentWidth = associatedContentHash.associated_content_position && associatedContentHash.associated_content_position.width;
   const associatedContent = associatedContentHash.associated_content && associatedContentHash.associated_content.components;
-
+  const subtitleCmsId = map(video.subtitlesConnection?.edges || [], 'node.system.uid')[0]
   return {
     type: typeName,
     video: {
@@ -257,7 +258,8 @@ const getFormattedVideoReference = (mainContentData, typeName) => {
       fileUrl: videoConnectionNode.url,
       title: videoConnectionNode.title,
       contentType: videoConnectionNode.content_type,
-      subtitleCmsId: map(video.subtitlesConnection?.edges || [], 'node.system.uid')[0],
+      subtitleCmsId,
+      subtileData: subtitleData.flat().find((obj) => obj.subtitleCmsId === subtitleCmsId)
     },
     showAssociatedText,
     associatedText: showAssociatedText ? associatedText.text : null,
@@ -267,7 +269,7 @@ const getFormattedVideoReference = (mainContentData, typeName) => {
   };
 };
 
-const formateContentComponent = (mainContentData, cardDetails) => {
+const formateContentComponent = (mainContentData, cardDetails, subtitleData = []) => {
   let componentHash;
 
   // {__typename: "PageComponentsComponentsTextReference", text_reference: {…}}
@@ -314,7 +316,7 @@ const formateContentComponent = (mainContentData, cardDetails) => {
       componentHash = getFormattedImageReference(mainContentData, typeName);
       break;
     case 'PageComponentsComponentsVideoReference':
-      componentHash = getFormattedVideoReference(mainContentData, typeName);
+      componentHash = getFormattedVideoReference(mainContentData, typeName, subtitleData);
       break;
     case CARD_REFERENCE:
       componentHash = getFormattedCardReference(mainContentData, typeName, cardDetails);
@@ -358,7 +360,7 @@ const getFormattedCardReference = (mainContentData, typeName, cardDetails) => {
     isexpandable: quoteNode.isexpandable,
     showSecondaryContent: isShowSecondaryContent(matchedCard),
     secondaryContentPosition: getCardSecondaryContentPosition(matchedCard),
-    secondaryComponents: (isShowSecondaryContent(matchedCard) && (quoteNode.secondary_content)) ? getFormattedCardComponents(quoteNode.secondary_content.components) : [],
+    secondaryComponents: (isShowSecondaryContent(matchedCard) && (quoteNode.secondary_content)) ? getFormattedCardComponents(quoteNode.secondary_content.components, ) : [],
     id: nodeId,
     components: getFormattedCardComponents(quoteNode.components.components, cardDetails),
   };
@@ -420,10 +422,10 @@ const getSecondaryContentPosition = (secondaryContentPositionData) => ({
   position: secondaryContentPositionData.position,
 });
 
-const getFormattedMainSecondaryContent = (data, cardDetails) => {
+const getFormattedMainSecondaryContent = (data, cardDetails, subtitleData) => {
   if ((data === null) || (isEmpty(data) && isEmpty(data.components))) return [];
   return data.components.map(
-    (mainContentData) => formateContentComponent(mainContentData, cardDetails),
+    (mainContentData) => formateContentComponent(mainContentData, cardDetails, subtitleData),
   );
 };
 
@@ -463,7 +465,7 @@ const removeNullContents = (collection, otherCollection) => {
 
 const getDisplayTitle = (pageData) => ((pageData.hide_title === true) ? null : pageData.display_title);
 
-const getFormattedImageAssociatedContents = (contentData, otherContentData, cardDetails) => {
+const getFormattedImageAssociatedContents = (contentData, otherContentData, cardDetails, subtitleData) => {
   const newContentData = isEmpty(contentData) ? [] : contentData;
   const newOtherContentData = isEmpty(otherContentData) ? [] : otherContentData;
   const items = isEmpty(newContentData.all_image) ? [] : newContentData.all_image.items;
@@ -491,11 +493,12 @@ const getFormattedImageAssociatedContents = (contentData, otherContentData, card
         formattedOtherContentImage = getFormattedMainSecondaryContent(
           otherContentImageObjectData.associated_content,
           cardDetails,
+          subtitleData,
         );
       }
 
       if (!isEmpty(obj.associated_content)) {
-        imageObject = getFormattedMainSecondaryContent(obj.associated_content, cardDetails);
+        imageObject = getFormattedMainSecondaryContent(obj.associated_content, cardDetails, subtitleData);
       }
 
       return ({
@@ -510,7 +513,7 @@ const getFormattedImageAssociatedContents = (contentData, otherContentData, card
   );
 };
 
-const getFormattedVideoAssociatedContents = (contentData, otherContentData, cardDetails) => {
+const getFormattedVideoAssociatedContents = (contentData, otherContentData, cardDetails, subtitleData) => {
   const newContentData = isEmpty(contentData) ? [] : contentData;
   const newOtherContentData = isEmpty(otherContentData) ? [] : otherContentData;
   const items = isEmpty(newContentData.all_video) ? [] : newContentData.all_video.items;
@@ -536,12 +539,12 @@ const getFormattedVideoAssociatedContents = (contentData, otherContentData, card
 
       if (otherContentVideoObjectData && !isEmpty(otherContentVideoObjectData.associated_content)) {
         formattedOtherContentVideo = getFormattedMainSecondaryContent(
-          otherContentVideoObjectData.associated_content, cardDetails,
+          otherContentVideoObjectData.associated_content, cardDetails, subtitleData
         );
       }
 
       if (!isEmpty(obj.associated_content)) {
-        videoObject = getFormattedMainSecondaryContent(obj.associated_content, cardDetails);
+        videoObject = getFormattedMainSecondaryContent(obj.associated_content, cardDetails, subtitleData);
       }
 
       return ({
@@ -572,27 +575,27 @@ const updateImageVideoAssociatedRecords = (
   imageVideoAssociatedRecords = [...imageVideoAssociatedRecords, ...uniqBy(totalData, 'cms_id')];
 };
 
-const getPageFormattedData = (pageMainContentCmsData, pageSecondaryContentCmsData, otherMainContentData, otherSecondaryContentData, pageConnectiveTissueBasicInfoData, bottomConnectiveTissueData, topConnectiveTissueData, mainContentImageData, secondaryContentImageData, secondaryContentVideoData, mainContentVideoData, otherMainContentImageData, otherSecondaryContentImageData, otherSecondaryContentVideoData, otherMainContentVideoData, cardDetails, cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardImageAssociatedContentData, otherCardImageAssociatedContentData, videoAssociatedContentData, otherVideoAssociatedContentData, imageAssociatedContentData, otherImageAssociatedContentData) => {
+const getPageFormattedData = (pageMainContentCmsData, pageSecondaryContentCmsData, otherMainContentData, otherSecondaryContentData, pageConnectiveTissueBasicInfoData, bottomConnectiveTissueData, topConnectiveTissueData, mainContentImageData, secondaryContentImageData, secondaryContentVideoData, mainContentVideoData, otherMainContentImageData, otherSecondaryContentImageData, otherSecondaryContentVideoData, otherMainContentVideoData, cardDetails, cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardImageAssociatedContentData, otherCardImageAssociatedContentData, videoAssociatedContentData, otherVideoAssociatedContentData, imageAssociatedContentData, otherImageAssociatedContentData, subtitleData) => {
   const pageData = pageMainContentCmsData.pagev4;
   const secondaryPageData = pageSecondaryContentCmsData.pagev4;
   const showSecondaryContent = pageData.show_secondary_content;
 
-  const cardImageAssociatedContent = getFormattedImageAssociatedContents(cardImageAssociatedContentData, otherCardImageAssociatedContentData, cardDetails);
+  const cardImageAssociatedContent = getFormattedImageAssociatedContents(cardImageAssociatedContentData, otherCardImageAssociatedContentData, cardDetails, subtitleData);
 
-  const cardVideoAssociatedContent = getFormattedVideoAssociatedContents(cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardDetails);
+  const cardVideoAssociatedContent = getFormattedVideoAssociatedContents(cardVideoAssociatedContentData, otherCardVideoAssociatedContentData, cardDetails, subtitleData);
 
-  const imageAssociatedContent = getFormattedImageAssociatedContents(imageAssociatedContentData, otherImageAssociatedContentData, cardDetails);
+  const imageAssociatedContent = getFormattedImageAssociatedContents(imageAssociatedContentData, otherImageAssociatedContentData, cardDetails, subtitleData);
 
-  const videoAssociatedContent = getFormattedVideoAssociatedContents(videoAssociatedContentData, otherVideoAssociatedContentData, cardDetails);
+  const videoAssociatedContent = getFormattedVideoAssociatedContents(videoAssociatedContentData, otherVideoAssociatedContentData, cardDetails, subtitleData);
 
   updateImageVideoAssociatedRecords(cardVideoAssociatedContent, cardImageAssociatedContent);
   updateImageVideoAssociatedRecords(videoAssociatedContent, imageAssociatedContent);
 
-  const otherMainContent = getFormattedMainSecondaryContent(otherMainContentData.pagev4.main_content, cardDetails);
-  const otherSecondaryContent = showSecondaryContent ? getFormattedMainSecondaryContent(otherSecondaryContentData.pagev4.secondary_content, cardDetails) : [];
+  const otherMainContent = getFormattedMainSecondaryContent(otherMainContentData.pagev4.main_content, cardDetails, subtitleData);
+  const otherSecondaryContent = showSecondaryContent ? getFormattedMainSecondaryContent(otherSecondaryContentData.pagev4.secondary_content, cardDetails, subtitleData) : [];
 
   const formattedSecondaryContent = showSecondaryContent ? getFormattedMainSecondaryContent(
-    secondaryPageData.secondary_content, cardDetails,
+    secondaryPageData.secondary_content, cardDetails, subtitleData,
   ) : [];
   const topConnectiveTissue = getFormattedConnectiveTissue(pageConnectiveTissueBasicInfoData.pagev4.top_connective_tissueConnection.edges, topConnectiveTissueData, cardDetails);
 
@@ -606,7 +609,7 @@ const getPageFormattedData = (pageMainContentCmsData, pageSecondaryContentCmsDat
       pageContent: {
         showSecondaryContent,
         secondaryContentPosition: getSecondaryContentPosition(pageData.secondary_content_position),
-        mainContent: removeNullContents(getFormattedMainSecondaryContent(pageData.main_content, cardDetails), otherMainContent),
+        mainContent: removeNullContents(getFormattedMainSecondaryContent(pageData.main_content, cardDetails, subtitleData), otherMainContent, subtitleData),
         secondaryContent: removeNullContents(formattedSecondaryContent, otherSecondaryContent),
         bottomConnectiveTissue,
         topConnectiveTissue,

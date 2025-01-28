@@ -6,6 +6,45 @@ const imageVideoAssociatedRecords = {
   videoIds: [],
 };
 
+const nodes = (item) => (
+  item.edges.map((edge) => edge.node)
+);
+
+const formatSubtitleData = async (subtitleData) => {
+  const subtitlePromises = subtitleData.map(async (item) => {
+    const subtitleContentList = nodes(item.subtitlesConnection);
+    const formattedSubtitles = await Promise.all(
+      subtitleContentList.map(async (subtitleContent) => {
+        const fileConnectionHash = nodes(subtitleContent.fileConnection)[0]; 
+        let subtitleUrl = fileConnectionHash?.url || '';
+        let subtitleText = '';
+        if (subtitleUrl) {
+          try {
+            const response = await fetch(subtitleUrl);
+            if (response.ok) {
+              subtitleText = await response.text()
+            }
+          } catch (error) {
+            console.error(`Error fetching subtitle data from ${subtitleUrl}:`, error);
+          }
+        }
+
+        return {
+          title: subtitleContent.title,
+          subtitleCmsId: subtitleContent.system.uid,
+          subtitleTitle: fileConnectionHash?.title || '',
+          subtitleUrl: subtitleUrl,
+          subtitleText: subtitleText,
+        };
+      })
+    );
+    return formattedSubtitles;
+  });
+
+  const formattedSubtitleData = await Promise.all(subtitlePromises);
+  return formattedSubtitleData.flat();
+};
+
 const findCardReference = (components) => {
   if (!components || components.length === 0) return [];
 
@@ -226,6 +265,7 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
 
 
   const contentData = {
+    allSubtitleData: [],
     mainContentVideoData: null,
     otherMainContentVideoData: null,
     secondaryContentVideoData: null,
@@ -262,12 +302,16 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       ...videosReferenceCard.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid),
     ];
 
-    const [mainContentVideoDataQuery, otherMainContentVideoDataQuery] = await Promise.all([
+    const [mainContentVideoDataQuery, otherMainContentVideoDataQuery, videoSubtitleQuery] = await Promise.all([
       fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  {
         videosReferenceCmsIds,
         locale,
       }),
       fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+      fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_SUBTITLE_DATA,  {
         videosReferenceCmsIds,
         locale,
       }),
@@ -279,18 +323,27 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
     if (otherMainContentVideoDataQuery.data) {
       contentData.otherMainContentVideoData = otherMainContentVideoDataQuery.data;
     }
+
+    if (videoSubtitleQuery?.data?.all_video?.items?.length) {
+      const formatSubtitles = await formatSubtitleData(videoSubtitleQuery.data.all_video.items);
+      contentData.allSubtitleData = contentData.allSubtitleData.concat(formatSubtitles)
+    }
   }
 
   if (!secondaryContentRes.loading && isEmpty(secondaryContentRes.error) && !isEmpty(secondaryContentRes.data)) {
     const videosReference = findVideoReference(secondaryContentRes.data.pagev4.secondary_content.components);
     const videosReferenceCmsIds = videosReference.map((obj) => obj.video_reference.videoConnection.edges[0].node.system.uid);
 
-    const [secondaryContentVideoQuery, otherSecondaryContentVideoDataQuery] = await Promise.all([
+    const [secondaryContentVideoQuery, otherSecondaryContentVideoDataQuery, videoSubtitleQuery] = await Promise.all([
       fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_DATA,  {
         videosReferenceCmsIds,
         locale,
       }),
       fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  {
+        videosReferenceCmsIds,
+        locale,
+      }),
+      fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_SUBTITLE_DATA,  {
         videosReferenceCmsIds,
         locale,
       }),
@@ -302,6 +355,11 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
 
     if (otherSecondaryContentVideoDataQuery.data) {
       contentData.otherSecondaryContentVideoData = otherSecondaryContentVideoDataQuery.data;
+    }
+
+    if (videoSubtitleQuery?.data?.all_video?.items?.length) {
+      const formatSubtitles = await formatSubtitleData(videoSubtitleQuery.data.all_video.items);
+      contentData.allSubtitleData = contentData.allSubtitleData.concat(formatSubtitles)
     }
   }
 
@@ -344,6 +402,12 @@ const getPageQueryData = async (pageCmsId, locale, client) => {
       contentData.cardVideoAssociatedContentData = cardVideoAssociatedContentDataQuery.data;
     }
 
+    const videoSubtitleQuery = await fetchGraphQLData(client, pagePreview.queries.GET_VIDEO_SUBTITLE_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
+
+    if (videoSubtitleQuery?.data?.all_video?.items?.length) {
+      const formatSubtitles = await formatSubtitleData(videoSubtitleQuery.data.all_video.items);
+      contentData.allSubtitleData = contentData.allSubtitleData.concat(formatSubtitles)
+    }
     const otherCardVideoAssociatedContentDataQuery = await fetchGraphQLData(client, pagePreview.queries.GET_OTHER_CONTENT_FOR_VIDEO_DATA,  { videosReferenceCmsIds: uniq(imageVideoAssociatedRecords.videoIds), locale })
 
     if (otherCardVideoAssociatedContentDataQuery.data) {

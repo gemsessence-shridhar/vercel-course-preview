@@ -35,6 +35,7 @@ export const getPageData = async (locale, pageCmsId) => {
     otherVideoAssociatedContentData,
     imageAssociatedContentData,
     otherImageAssociatedContentData,
+    allSubtitleData,
   } = await getPageQueryData(pageCmsId, locale, client);
 
   if (
@@ -96,7 +97,8 @@ export const getPageData = async (locale, pageCmsId) => {
         videoAssociatedContentData,
         otherVideoAssociatedContentData,
         imageAssociatedContentData,
-        otherImageAssociatedContentData
+        otherImageAssociatedContentData,
+        allSubtitleData,
       );
     }
     return formattedData;

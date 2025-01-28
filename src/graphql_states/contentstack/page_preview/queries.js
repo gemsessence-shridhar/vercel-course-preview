@@ -639,26 +639,37 @@ const GET_LEVEL_TWO_COLLECTION_WITH_PAGES = gql`
   }
 `;
 
-const GET_VIDEO_SUBTITLE = gql`
-query GetSubtitle(
-  $subtitleCmsId: String!, $locale: String!
-) {
-  subtitles(uid: $subtitleCmsId, locale: $locale, fallback_locale: false)  {
-    title
-    system {
-      locale
-    }
-    fileConnection {
-      edges {
-        node {
-          url
-          title
+const GET_VIDEO_SUBTITLE_DATA = gql`
+  query GetVideoSubtitleData(
+    $videosReferenceCmsIds: [String!], $locale: String!
+  ) {
+    all_video(where: {uid_in: $videosReferenceCmsIds}, locale: $locale)  {
+      items {
+        subtitlesConnection {
+          edges {
+            node {
+              ... on Subtitles {
+                title
+                fileConnection {
+                  edges {
+                    node {
+                      title
+                      url
+                    }
+                  }
+                }
+                system {
+                  uid
+                }
+              }
+            }
+          }
         }
       }
     }
   }
-}
 `;
+
 
 export {
   GET_PAGE_PREVIEW_WITH_MAIN_CONTENT,
@@ -685,5 +696,5 @@ export {
   GET_LEVEL_THREE_COLLECTION_WITH_TWO,
   GET_LEVEL_THREE_COURSE_WITH_THREE,
   GET_LEVEL_TWO_COLLECTION_WITH_PAGES,
-  GET_VIDEO_SUBTITLE,
+  GET_VIDEO_SUBTITLE_DATA,
 };

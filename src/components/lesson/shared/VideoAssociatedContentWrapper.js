@@ -16,7 +16,7 @@ import ContentVideo from './contentVideo';
 import ContentImage from './contentImage';
 import CardReference from '../CardReference';
 
-const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitles }) => {
+const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitleText }) => {
   let secondaryWidth = '0';
   let secondaryPosition = 'left';
 
@@ -66,7 +66,7 @@ const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitles }) => 
         );
       default: return (
         !isEmpty(contentData.text) ? (
-          <div key={keyProp} dangerouslySetInnerHTML={{ _html: contentData.text }} />
+          <div key={keyProp} dangerouslySetInnerHTML={{ __html: contentData.text }} />
         ) : null
       );
     }
@@ -95,12 +95,27 @@ const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitles }) => 
                 <VideoPlayer
                   {...videoOptions}
                   key={uuidv4()}
-                  subtitles={subtitles}
                 />
               </div>
             )
             : null
         }
+
+        {subtitleText && (
+          <div className="mt-4">
+            <div
+              className="border rounded bg-light p-3"
+              style={{
+                maxHeight: '400px',
+                overflow: 'auto',
+              }}
+            >
+              <pre className="m-0" style={{ whiteSpace: 'pre-wrap' }}>
+                {subtitleText}
+              </pre>
+            </div>
+          </div>
+        )}
       </PageWrapper.PrimaryColumn>
       { getAssociatedContent() }
     </PageWrapper>
@@ -123,6 +138,7 @@ VideoAssociatedContentWrapper.propTypes = {
     width: PropTypes.string.isRequired,
     height: PropTypes.string.isRequired,
   }),
+  subtitleText: PropTypes.string,
 };
 
 export default React.memo(VideoAssociatedContentWrapper);

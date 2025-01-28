@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import PageWrapper from '../../shared/page_wrapper';
 import VideoAssociatedContentWrapper from './VideoAssociatedContentWrapper';
-import Loader from '../../shared/Loader';
-import { useVideoSubTitles } from '../../shared/hooks/useVideoSubtitles';
 
 const ContentVideo = ({ content }) => {
   let secondaryWidth = '0';
@@ -17,14 +15,7 @@ const ContentVideo = ({ content }) => {
     }
   }
   const videoBlock = content.video;
-  const {
-    subtitles,
-    loading,
-  } = useVideoSubTitles(videoBlock.subtitleCmsId)
-
-  if (loading) return <Loader />;
-
-
+  const subtitleText = videoBlock?.subtileData?.subtitleText;
   const videoJsOptions = () => (
     {
       poster: videoBlock.thumbnailUrl,
@@ -45,7 +36,7 @@ const ContentVideo = ({ content }) => {
         <VideoAssociatedContentWrapper
           content={content.video}
           videoOptions={videoJsOptions()}
-          subtitles={subtitles}
+          subtitleText={subtitleText}
         />
       </PageWrapper.PrimaryColumn>
       {
