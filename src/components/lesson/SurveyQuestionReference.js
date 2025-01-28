@@ -1,6 +1,7 @@
 import React from 'react';
 import { find } from 'lodash';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import styles from './lesson-page.module.scss';
 import SurveyQuestionAnswersBlock from './SurveyQuestionAnswersBlock';
 import useSuperScript from '../shared/hooks/useSuperScript';

@@ -1,5 +1,6 @@
 import React from 'react';
 import { find, isEmpty, map } from 'lodash';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import styles from './lesson-page.module.scss';
 import LessonAnswersBlock from './LessonAnswersBlock';
