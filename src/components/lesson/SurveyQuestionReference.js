@@ -22,7 +22,7 @@ const SurveyQuestionReference = ({
   return (
     <>
       <div className={styles['question-answer-container']}>
-        <h4 data-testid="survey-question" className={styles['question-heading']}>
+        <h4 data-testid="survey-question" className={classNames("dark-text", styles['question-heading'])}>
           {content.question}
         </h4>
         {content.surveyAnswers.map((answer) => (

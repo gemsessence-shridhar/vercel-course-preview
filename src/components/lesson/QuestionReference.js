@@ -58,9 +58,9 @@ const QuestionReference = ({
   return (
     <>
       <div className={styles['question-answer-container']}>
-        <h4 data-testid="question-heading" className={styles['question-heading']}>
-          {content.question}
-        </h4>
+      <h4 data-testid="question-heading" className={classNames("dark-text", styles['question-heading'])}>
+        {content.question}
+      </h4>
         {content.answers.map((answer) => (
           <LessonAnswersBlock
             key={answer.id}
