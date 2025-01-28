@@ -59,7 +59,7 @@ const QuestionReference = ({
   return (
     <>
       <div className={styles['question-answer-container']}>
-      <h4 data-testid="question-heading" className={classNames("dark-text", styles['question-heading'])}>
+      <h4 data-testid="question-heading" className={classNames("text-dark", styles['question-heading'])}>
         {content.question}
       </h4>
         {content.answers.map((answer) => (
