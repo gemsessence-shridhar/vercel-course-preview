@@ -104,7 +104,7 @@ const VideoAssociatedContentWrapper = ({ content, videoOptions, subtitleText }) 
         {subtitleText && (
           <div className="mt-4">
             <div
-              className="border rounded bg-light p-3"
+              className="border rounded bg-light text-dark p-3"
               style={{
                 maxHeight: '400px',
                 overflow: 'auto',
