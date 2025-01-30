@@ -4,7 +4,7 @@ const GET_L1_PAGE_CMS_IDS = gql`
   query GetL1PageCmsIds(
     $l1CmsId: String!, $locale: String!
   ) {
-		level_1(uid: $l1CmsId, locale: $locale) {
+		level_1(uid: $l1CmsId, locale: $locale, fallback_locale: true) {
 			pagesConnection {
 				edges {
 					node {
