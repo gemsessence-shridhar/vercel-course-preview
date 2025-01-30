@@ -1,4 +1,4 @@
-import { getPageData } from '@components/PagePreview/utils/dataFetch';
+import { getPageData } from '@components/PagePreview/dataFetch';
 import PagePreview from '@components/PagePreview/PagePreview';
 
 export default async function PagePreviewWrapper({ params }) {
