@@ -1,0 +1,13 @@
+{
+  "answers": {
+    "feedback": {
+      "label": {
+        "correct": "Best choice!",
+        "incorrect": "Not best choice."
+      }
+    }
+  },
+  "label":{
+    "youAreHere": "You are here"
+  }
+}
