@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToggleContext from './ToggleContext';
-
 import { ChevronDown } from '../vib_icons';
 
 const CollapseTitle = ({ children }) => (
-  <ToggleContext eventKey="1">
+  <div className="d-flex justify-content-between align-items-center px-4 mx-1 card-header">
     <span>{children}</span>
     <ChevronDown fillColor="#4A4A4A" />
-  </ToggleContext>
+  </div>
 );
 
 CollapseTitle.propTypes = {
