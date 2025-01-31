@@ -57,11 +57,3 @@ export const getMainContentDataComponents = (components, mainContentResCardData)
 		}
 	});
 };
-
-export const sampleItems = [
-  { id: '1', title: 'LevelOneCollection-101', status: 'completed', position: 1, __typename: 'LevelOneCollection' },
-  { id: '2', title: 'LevelOneCollection-202', status: 'inProgress', position: 2, __typename: 'LevelOneCollection' },
-  { id: '3', title: 'LevelOneCollection-303', status: 'open', position: 3, __typename: 'LevelOneCollection' },
-  { id: '4', title: 'LevelOneCollection-404', status: 'open', position: 4, __typename: 'LevelOneCollection' },
-  { id: '5', title: 'LevelOneCollection-505', status: 'open', position: 5, __typename: 'LevelOneCollection' },
-];
