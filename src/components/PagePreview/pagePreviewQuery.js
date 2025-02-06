@@ -1,14 +1,11 @@
 import { isEmpty, uniq } from 'lodash';
 import { pagePreview } from '@graphql/contentstack';
+import { nodes } from '@components/shared/utils'
 
 const imageVideoAssociatedRecords = {
   imageIds: [],
   videoIds: [],
 };
-
-const nodes = (item) => (
-  item.edges.map((edge) => edge.node)
-);
 
 const formatSubtitleData = async (subtitleData) => {
   const subtitlePromises = subtitleData.map(async (item) => {

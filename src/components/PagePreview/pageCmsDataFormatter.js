@@ -1,11 +1,8 @@
 import {
   isEmpty, uniqBy, map
 } from 'lodash';
+import { nodes } from '@components/shared/utils'
 const CARD_REFERENCE = 'PageComponentsComponentsCardReference';
-
-const nodes = (item) => (
-  item.edges.map((edge) => edge.node)
-);
 
 const getId = (data) => data.system.uid;
 

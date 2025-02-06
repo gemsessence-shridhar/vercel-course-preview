@@ -1,8 +1,7 @@
 import { getPageData } from '@components/PagePreview/dataFetch';
 import createApolloClient from '@/apollo_client';
 import { level1Preview } from '@graphql/contentstack';
-
-const nodes = (item) => item.edges.map((edge) => edge.node);
+import { nodes } from '@components/shared/utils'
 
 const getPageCmsIds = (l1_page_cms_ids_data) => {
   const pagesConnection = nodes(l1_page_cms_ids_data.level_1.pagesConnection);
