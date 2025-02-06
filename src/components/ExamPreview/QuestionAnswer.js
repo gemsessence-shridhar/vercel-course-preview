@@ -1,6 +1,5 @@
 "use client"
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Row, Col } from 'react-bootstrap';
 import { isEmpty } from 'lodash';
