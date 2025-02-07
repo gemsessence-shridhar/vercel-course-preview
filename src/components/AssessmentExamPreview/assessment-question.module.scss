@@ -1,0 +1,26 @@
+
+.content-container {
+  .question-block {
+    margin-top: 3.5em;
+    color: #000000;
+    font-family: "Open Sans";
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.89px;
+    line-height: 27px;
+    text-align: center;
+    padding-bottom: 1.5em;
+    font-weight: 600 !important;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  .answer-block {
+    padding: 16px !important;
+    display: flex;
+    div{
+      font-size: 15px;
+      font-weight: 600;
+      color: #000000 !important;
+    }
+  }
+}

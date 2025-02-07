@@ -1,10 +1,6 @@
 import { isEmpty } from 'lodash';
 import { nodes } from '@components/shared/utils';
 
-const getFormattedTitle = (node) => (
-  isEmpty(node.display_title) ? node.title : node.display_title
-);
-
 const getId = (data) => data.system.uid;
 
 const getFormattedAnswers = (answersConnection) => {
@@ -50,38 +46,6 @@ const getFormattedQuestion = (questionData) => {
   };
 };
 
-const getExamImageHash = (exam) => {
-  let imageHash = null;
-  const examImage = nodes(exam.imageConnection)[0];
-  if (!isEmpty(examImage)) {
-    const imageNode = examImage.imageConnection.edges[0].node;
-    if (!isEmpty(imageNode)) {
-      imageHash = {
-        id: getId(imageNode),
-        url: imageNode.url,
-        title: imageNode.title,
-      };
-    }
-  }
-
-  return imageHash;
-};
-
-const getExamQuestionFormattedData = (examCmsData, questionContentCmsData) => {
-  const { exam } = examCmsData;
-
-  return {
-    exam: {
-      id: getId(exam),
-      title: getFormattedTitle(exam),
-      duration: exam.duration_minutes,
-      image: getExamImageHash(exam),
-    },
-    question: getFormattedQuestion(questionContentCmsData),
-  };
-};
-
 export {
-  getExamQuestionFormattedData,
   getFormattedQuestion,
 };
