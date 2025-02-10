@@ -1,3 +1,3 @@
 export const nodes = (item) => (
-    item.edges.map((edge) => edge.node)
-  );
+  item.edges.map((edge) => edge.node)
+);

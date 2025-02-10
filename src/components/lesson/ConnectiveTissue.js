@@ -4,32 +4,20 @@ import PageComponentsComponent from './PageComponentsComponent';
 
 const ConnectiveTissue = ({
   connectiveTissueContent,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers,
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
   className,
-  setCurrentQuestionId,
-  setUserAnswers,
-  setCurrentSurveyQuestionId,
 }) => {
   const renderContent = (content, index) => {
     return (
       <PageComponentsComponent
         key={content.type + index}
         content={content}
-        setSelectedAnswers={setSelectedAnswers}
-        userAnswers={userAnswers}
-        selectedAnswers={selectedAnswers}
         currentQuestionId={currentQuestionId}
         currentSurveyQuestionId={currentSurveyQuestionId}
         courseId={courseId}
         isConnectiveTissue
-        setCurrentQuestionId={setCurrentQuestionId}
-        setUserAnswers={setUserAnswers}
-        setCurrentSurveyQuestionId={setCurrentSurveyQuestionId}
       />
     );
   };
@@ -50,9 +38,6 @@ ConnectiveTissue.defaultProps = {
 
 ConnectiveTissue.propTypes = {
   connectiveTissueContent: PropTypes.instanceOf(Array).isRequired,
-  setSelectedAnswers: PropTypes.func.isRequired,
-  userAnswers: PropTypes.instanceOf(Array).isRequired,
-  selectedAnswers: PropTypes.instanceOf(Array).isRequired,
   currentQuestionId: PropTypes.string,
   currentSurveyQuestionId: PropTypes.string,
   courseId: PropTypes.string.isRequired,

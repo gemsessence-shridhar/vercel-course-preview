@@ -8,9 +8,6 @@ import ImageAssociatedContentWrapper from './ImageAssociatedContentWrapper';
 
 const ContentImage = ({
   content,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers,
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
@@ -35,9 +32,6 @@ const ContentImage = ({
           <div className={styles['lesson-page-img-wrapper']}>
             <ImageAssociatedContentWrapper
               content={content}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
               currentQuestionId={currentQuestionId}
               currentSurveyQuestionId={currentSurveyQuestionId}
               courseId={courseId}

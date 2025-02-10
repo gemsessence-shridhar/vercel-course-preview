@@ -1,61 +1,27 @@
 import React from 'react';
-import { find, isEmpty, map } from 'lodash';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import styles from './lesson-page.module.scss';
 import LessonAnswersBlock from './LessonAnswersBlock';
+import classNames from 'classnames';
 import NotSelectAllCorrectAnswersMsg from '../shared/QuestionAnswers/NotSelectAllCorrectAnswersMsg';
 import CardWrapper from '../shared/card_wrapper';
 import useSuperScript from '../shared/hooks/useSuperScript';
-// import { FormattedMessage } from 'react-intl';
 
 const QuestionReference = ({
   content,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers
 }) => {
   useSuperScript();
 
   const { questionType } = content;
   const isMultiChoiceQuestion = questionType === 'multipleChoice';
 
-  const handleSelectAnswer = (event) => {
-    const targetElement = event.target;
-    const answer = find(content.answers, { id: targetElement.value });
-    const alreadySelectedAnswers = !isEmpty(selectedAnswers) ? selectedAnswers : [];
-
-    if (isMultiChoiceQuestion) {
-      if (targetElement.checked) {
-        setSelectedAnswers([...selectedAnswers, answer.id]);
-      } else {
-        const filteredAnswers = alreadySelectedAnswers.filter((ansId) => ansId !== answer.id);
-        setSelectedAnswers(filteredAnswers);
-      }
-    } else {
-      setSelectedAnswers([answer.id]);
-    }
-  };
-
   const isAllSelectedAnswerIsNotCorrect = () => {
     if (isMultiChoiceQuestion) {
-      if (userAnswers.length === 0) {
-        return false;
-      }
-      const correctAnswers = map(content.answers.filter((obj) => obj.isCorrectResponse == true), 'id');
-      const selectedCorrectAnswerLength = userAnswers.filter((obj) => correctAnswers.includes(obj)).length;
-
-      if (selectedCorrectAnswerLength === 0) {
-        return false;
-      } else if (selectedCorrectAnswerLength === correctAnswers.length) {
-        const selectedInCorrectAnswerLength = userAnswers.filter((obj) => !correctAnswers.includes(obj)).length;
-        return (selectedInCorrectAnswerLength > 0);
-      }
-      return true;
+      const correctAnswers = content.answers.filter((obj) => obj.isCorrectResponse).length;
+      return correctAnswers !== content.answers.length;
     }
   };
 
-  const showFeedback = userAnswers.length !== 0;
   return (
     <>
       <div className={styles['question-answer-container']}>
@@ -66,13 +32,12 @@ const QuestionReference = ({
           <LessonAnswersBlock
             key={answer.id}
             answer={answer}
-            showFeedback={showFeedback}
-            toggleCheckbox={handleSelectAnswer}
-            selectedAnswerIds={selectedAnswers}
+            showFeedback={true}
+            toggleCheckbox={() => {}}
+            selectedAnswerIds={[]}
             enableMultiSelect={isMultiChoiceQuestion}
-            isChecked={userAnswers.includes(answer.id) || selectedAnswers.includes(answer.id)}
-            userAnswers={userAnswers}
-            disableAnswerOptions={showFeedback}
+            isChecked={true}
+            disableAnswerOptions={true}
           />
         ))}
         {isAllSelectedAnswerIsNotCorrect() ? <NotSelectAllCorrectAnswersMsg /> : null}
@@ -103,8 +68,5 @@ const QuestionReference = ({
 
 QuestionReference.propTypes = {
   content: PropTypes.instanceOf(Object).isRequired,
-  setSelectedAnswers: PropTypes.func.isRequired,
-  userAnswers: PropTypes.instanceOf(Array).isRequired,
-  selectedAnswers: PropTypes.instanceOf(Array).isRequired,
 };
 export default QuestionReference;

@@ -16,16 +16,10 @@ import useSuperScript from '../shared/hooks/useSuperScript';
 
 const PageComponentsComponent = ({
   content,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers,
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
   isConnectiveTissue,
-  setCurrentQuestionId,
-  setUserAnswers,
-  setCurrentSurveyQuestionId,
 }) => {
   useSuperScript();
 
@@ -37,9 +31,6 @@ const PageComponentsComponent = ({
         return (
           <QuestionReference
             content={content.question}
-            setSelectedAnswers={setSelectedAnswers}
-            userAnswers={userAnswers}
-            selectedAnswers={selectedAnswers}
           />
         );
       }
@@ -49,9 +40,6 @@ const PageComponentsComponent = ({
         return (
           <SurveyQuestionReference
             content={content.surveyQuestion}
-            setSelectedAnswers={setSelectedAnswers}
-            userAnswers={userAnswers}
-            selectedAnswers={selectedAnswers}
           />
         );
       }
@@ -74,9 +62,6 @@ const PageComponentsComponent = ({
       return (
         <ContentImage
           content={content}
-          setSelectedAnswers={setSelectedAnswers}
-          userAnswers={userAnswers}
-          selectedAnswers={selectedAnswers}
           currentQuestionId={currentQuestionId}
           currentSurveyQuestionId={currentSurveyQuestionId}
           courseId={courseId}
@@ -90,15 +75,9 @@ const PageComponentsComponent = ({
       return (
         <CardReference
           content={content}
-          setSelectedAnswers={setSelectedAnswers}
-          userAnswers={userAnswers}
-          selectedAnswers={selectedAnswers}
           currentQuestionId={currentQuestionId}
           currentSurveyQuestionId={currentSurveyQuestionId}
           courseId={courseId}
-          setCurrentQuestionId={setCurrentQuestionId}
-          setUserAnswers={setUserAnswers}
-          setCurrentSurveyQuestionId={setCurrentSurveyQuestionId}
         />
       );
     case 'PageComponentsComponentsLearningResourceReference':

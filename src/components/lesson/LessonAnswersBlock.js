@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { isEmpty } from 'lodash';
 import Feedback from '../shared/QuestionAnswers/Feedback';
 import styles from './styles.module.scss';
 import VibCheckboxRadioButton from '../shared/vib_checkbox_and_radio_button';
@@ -13,19 +12,16 @@ const LessonAnswersBlock = ({
   toggleCheckbox,
   enableMultiSelect,
   disableAnswerOptions,
-  userAnswers,
   isChecked,
   showFeedback,
 }) => {
   const isCorrectAnswerSelected = () => (
     isChecked
-    && !isEmpty(userAnswers)
     && isCorrectResponse
   );
 
   const isIncorrectAnswerSelected = () => (
     isChecked
-    && !isEmpty(userAnswers)
     && !isCorrectResponse
   );
 
@@ -39,7 +35,7 @@ const LessonAnswersBlock = ({
   };
 
   const getCheckedCheckboxClassName = () => {
-    if (!isEmpty(userAnswers) && isChecked) {
+    if (isChecked) {
       return 'checked-checkbox-container';
     }
     return '';
@@ -104,9 +100,6 @@ LessonAnswersBlock.propTypes = {
   isChecked: PropTypes.bool.isRequired,
   toggleCheckbox: PropTypes.func.isRequired,
   enableMultiSelect: PropTypes.bool.isRequired,
-  userAnswers: PropTypes.arrayOf(
-    PropTypes.string.isRequired,
-  ).isRequired,
 };
 
 export default LessonAnswersBlock;

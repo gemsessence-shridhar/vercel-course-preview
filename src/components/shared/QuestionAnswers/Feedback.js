@@ -59,7 +59,7 @@ const Feedback = ({
         !isMultiSelect
           ? (
             <span
-              className={classNames("text-dark", styles['feedback-text'])}
+              className={styles['feedback-text']}
               dangerouslySetInnerHTML={{ __html: feedback }}
             />
           )

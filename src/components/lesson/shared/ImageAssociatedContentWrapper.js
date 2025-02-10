@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Image } from 'react-bootstrap';
@@ -17,14 +17,11 @@ import CardReference from '../CardReference';
 
 const ImageAssociatedContentWrapper = ({
   content,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers,
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
 }) => {
-  const [isPortraitImage, setIsPortraitImage] = useState(false);
+  let isPortraitImage = false
   let secondaryWidth = '0';
   let secondaryPosition = 'left';
 
@@ -45,7 +42,7 @@ const ImageAssociatedContentWrapper = ({
         */
 
         if (height > width || width - height < 600) {
-          setIsPortraitImage(true);
+          isPortraitImage = true;
         }
       };
     }
@@ -91,9 +88,6 @@ const ImageAssociatedContentWrapper = ({
             <QuestionReference
               key={keyProp}
               content={contentData.question}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
             />
           );
         }
@@ -104,9 +98,6 @@ const ImageAssociatedContentWrapper = ({
             <SurveyQuestionReference
               key={keyProp}
               content={contentData.surveyQuestion}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
             />
           );
         }
@@ -115,9 +106,6 @@ const ImageAssociatedContentWrapper = ({
         return (
           <CardReference
             content={content}
-            setSelectedAnswers={setSelectedAnswers}
-            userAnswers={userAnswers}
-            selectedAnswers={selectedAnswers}
             currentQuestionId={currentQuestionId}
             currentSurveyQuestionId={currentSurveyQuestionId}
             courseId={courseId}

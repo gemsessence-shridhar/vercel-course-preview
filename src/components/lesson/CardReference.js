@@ -16,15 +16,9 @@ import PageWrapper from '../shared/page_wrapper';
 
 const CardReference = ({
   content,
-  setSelectedAnswers,
-  userAnswers,
-  selectedAnswers,
   currentQuestionId,
   currentSurveyQuestionId,
   courseId,
-  setCurrentQuestionId,
-  setUserAnswers,
-  setCurrentSurveyQuestionId,
 }) => {
   let firstQuestion = null;
 
@@ -49,13 +43,9 @@ const CardReference = ({
 
   if (firstQuestion) {
     if (firstQuestion.question && firstQuestion.question.id !== currentQuestionId) {
-      setCurrentQuestionId(firstQuestion.question.id);
-      setUserAnswers(map(firstQuestion.question.submittedAnswers, 'id'));
+      currentQuestionId = firstQuestion.question.id
     } else if (firstQuestion.surveyQuestion && firstQuestion.surveyQuestion.id !== currentSurveyQuestionId) {
-      setCurrentSurveyQuestionId(firstQuestion.surveyQuestion.id);
-      if (firstQuestion.surveyQuestion.submittedAnswer) {
-        setUserAnswers([firstQuestion.surveyQuestion.submittedAnswer.id]);
-      }
+      currentSurveyQuestionId = firstQuestion.surveyQuestion.id
     }
   }
 
@@ -88,9 +78,6 @@ const CardReference = ({
           <ContentImage
             key={keyProp}
             content={contentData}
-            setSelectedAnswers={setSelectedAnswers}
-            userAnswers={userAnswers}
-            selectedAnswers={selectedAnswers}
             currentQuestionId={currentQuestionId}
             currentSurveyQuestionId={currentSurveyQuestionId}
             courseId={courseId}
@@ -106,9 +93,6 @@ const CardReference = ({
             <QuestionReference
               key={keyProp}
               content={contentData.question}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
             />
           );
         }
@@ -119,9 +103,6 @@ const CardReference = ({
             <SurveyQuestionReference
               key={keyProp}
               content={contentData.surveyQuestion}
-              setSelectedAnswers={setSelectedAnswers}
-              userAnswers={userAnswers}
-              selectedAnswers={selectedAnswers}
             />
           );
         }
