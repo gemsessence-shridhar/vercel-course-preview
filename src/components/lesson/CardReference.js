@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, map } from 'lodash';
+import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import VibCollapsePanel from '../shared/vib_collapse_panel';
 import ContentImage from './shared/contentImage';
